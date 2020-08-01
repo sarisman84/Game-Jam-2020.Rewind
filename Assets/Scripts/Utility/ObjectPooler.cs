@@ -19,12 +19,12 @@ public static class ObjectPooler
     /// <typeparam name="T"></typeparam>
     /// <param name="prefab">The object in question to add into the pool.</param>
     /// <param name="amount">The amount of objects created that is going to be added into the pool.</param>
-    public static void PoolGameObject<T>(T prefab, int amount) where T : Component
+    public static void PoolGameObject<T>(T prefab, int amount)
     {
 
         List<GameObject> poolofObjects = new List<GameObject>();
 
-        Transform parent = new GameObject($"{prefab.name}'s list").transform;
+        Transform parent = new GameObject($"{(prefab as GameObject).name}'s list").transform;
 
         if (dictionaryOfPooledObjects.ContainsKey(prefab.GetType()))
         {
@@ -36,7 +36,8 @@ public static class ObjectPooler
         for (int i = 0; i < amount; i++)
         {
 
-            T obj = Object.Instantiate(prefab, parent);
+            GameObject obj = Object.Instantiate(prefab as GameObject, parent);
+            obj.gameObject.SetActive(false);
             poolofObjects.Add(obj.gameObject);
 
         }
@@ -57,7 +58,7 @@ public static class ObjectPooler
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns>An inactive gameObject. If all objects in a pool are used, it creates a new active gameObject and adds it into the pool.</returns>
-    public static GameObject GetPoolObject<T>() where T : Component
+    public static GameObject GetPoolObject<T>()
     {
         foreach (KeyValuePair<Type, List<GameObject>> item in dictionaryOfPooledObjects)
         {
@@ -69,8 +70,9 @@ public static class ObjectPooler
                         return element.gameObject;
                 }
 
-                GameObject obj = Object.Instantiate(item.Value[0].gameObject);
+                GameObject obj = Object.Instantiate(item.Value[0].gameObject, item.Value[0].gameObject.transform.parent);
                 item.Value.Add(obj);
+
                 return obj;
 
             }

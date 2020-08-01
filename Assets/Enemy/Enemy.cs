@@ -10,9 +10,10 @@ namespace Assets.Enemy
 {
     class Enemy
     {
-        public Enemy(int x,int z) {
+        public Enemy(Vector3 pos)
+        {
             GameObject newBox = GameObject.CreatePrimitive(PrimitiveType.Capsule);//UnityEngine.Object.Instantiate(UnityEngine.GameObject.);
-            newBox.transform.position = new Vector3(x,0,z);
+            newBox.transform.position = pos;
 
         }
     }
