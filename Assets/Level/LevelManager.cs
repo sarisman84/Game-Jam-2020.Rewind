@@ -29,14 +29,11 @@ public class LevelManager : MonoBehaviour
         {
             for (int ii = 0; ii < FieldAreaZ; ii++)
             {
-
-
-
                 if (i == 0 || ii == 0 || i == FieldAreaX - 1 || ii == FieldAreaZ - 1)
                 {
                     GameObject obj = ObjectPooler.GetPoolObject<GameObject>();
                     obj.gameObject.SetActive(true);
-                    obj.transform.position = new Vector3(CenterOffsetPositionX(i), floor.transform.position.y + 1.5f, CenterOffsetPositionY(ii));
+                    obj.transform.position = new Vector3(CenterOffsetPositionX(i), floor.transform.position.y + 1f, CenterOffsetPositionY(ii));
                 }
                 //SpawnEnemy(new Vector2Int(i - FieldAreaX / 2, ii - FieldAreaZ / 2));
             }
