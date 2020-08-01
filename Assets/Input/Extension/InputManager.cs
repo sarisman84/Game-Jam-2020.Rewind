@@ -75,7 +75,7 @@ public class InputManager : InputSchema.IIngameActions
 
     public Vector3 GetMovement(float speed)
     {
-        return MovementDirection * Time.deltaTime * speed;
+        return new Vector3(MovementDirection.x, 0, MovementDirection.y) * Time.deltaTime * speed;
     }
 
 
