@@ -50,16 +50,37 @@ public class InputManager : InputSchema.IIngameActions
     }
     public void OnAiming(InputAction.CallbackContext context)
     {
-        
+        CursorPosition = context.ReadValue<Vector2>();
     }
 
     public void OnMovement(InputAction.CallbackContext context)
     {
-        
+        MovementDirection = context.ReadValue<Vector2>();
     }
 
     public void OnShoot(InputAction.CallbackContext context)
     {
-       
+        IsShooting = context.ReadValue<float>() == 1;
+    }
+
+    Vector2 CursorPosition { set; get; }
+    Vector3 MovementDirection { set; get; }
+
+    bool IsShooting { get; set; }
+
+    public Vector3 AimDirection(Vector3 origin)
+    {
+        return (origin - new Vector3(CursorPosition.x, 0, CursorPosition.y)).normalized;
+    }
+
+    public Vector3 GetMovement(float speed)
+    {
+        return MovementDirection * Time.deltaTime * speed;
+    }
+
+
+    public bool OnShootHeld()
+    {
+        return IsShooting;
     }
 }
