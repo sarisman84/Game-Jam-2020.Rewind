@@ -60,18 +60,26 @@ public class InputManager : InputSchema.IIngameActions
 
     public void OnShoot(InputAction.CallbackContext context)
     {
-        IsShooting = context.ReadValue<float>() == 1;
+
+        IsShooting = context.performed;
+
+        //Debug.Log($"Has Performed: {context.performed}");
+        //Debug.Log($"Has Started: {context.started}");
+
+
+        //Debug.Log($"Result: {IsShooting}");
+
     }
 
-  
+
     Vector3 MovementDirection { set; get; }
 
-    bool IsShooting { get; set; }
+    public bool IsShooting { get; set; }
     public Vector3 mousePosition { get; internal set; }
 
 
 
-   
+
 
     public Vector3 GetMovement(float speed)
     {
@@ -79,8 +87,5 @@ public class InputManager : InputSchema.IIngameActions
     }
 
 
-    public bool OnShootHeld()
-    {
-        return IsShooting;
-    }
+
 }

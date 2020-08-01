@@ -10,9 +10,14 @@ using UnityEngine.PlayerLoop;
 public class PlayerController : MonoBehaviour
 {
     // Start is called before the first frame update
-
+    [SerializeField]
+    bool showCursor;
     [SerializeField]
     private float Speed = 1;
+
+
+    [SerializeField]
+    BulletBehaivour bulletPrefab;
 
     CharacterController controller;
 
@@ -21,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
+        ObjectPooler.PoolGameObject(bulletPrefab, 300);
 
 
     }
@@ -28,24 +34,36 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector3 movement = InputManager.Singleton.GetMovement(Speed);
-
-        //Vector3 aimDirection = InputManager.Singleton.AimDirection(transform.position);
-        //if (aimDirection != Vector3.zero)
-        //{
-        //    Quaternion newRotation = Quaternion.LookRotation(aimDirection, Vector3.up);
-        //    newRotation.x = 0;
-        //    newRotation.z = 0;
-        //    //newRotation.y = -newRotation.y;
-        //    aimGameObject.transform.rotation = newRotation;
-        //}
-
+        MovementInput();
         AimIndicator();
+        ShootBullet();
 
 
 
 
 
+
+
+
+
+
+    }
+
+    private void ShootBullet()
+    {
+        if (InputManager.Singleton.IsShooting)
+        {
+            GameObject bullet = ObjectPooler.GetPoolObject<BulletBehaivour>();
+            bullet.transform.position = aimGameObject.transform.GetChild(0).transform.position;
+            bullet.transform.forward = aimGameObject.transform.forward;
+            bullet.SetActive(true);
+            InputManager.Singleton.IsShooting = false;
+        }
+    }
+
+    private void MovementInput()
+    {
+        Vector3 movement = InputManager.Singleton.GetMovement(Speed);
         controller.Move(movement);
     }
 
@@ -78,6 +96,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawSphere(lookAtPos, 1);
+        if (showCursor && Application.isPlaying)
+            Gizmos.DrawSphere(lookAtPos, 1);
     }
 }
