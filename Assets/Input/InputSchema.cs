@@ -102,7 +102,7 @@ public class @InputSchema : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""0655740d-e122-49d3-85a7-1eb8cdf9181c"",
-                    ""path"": ""<Mouse>/position"",
+                    ""path"": ""<Pointer>/position"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard and Mouse"",
