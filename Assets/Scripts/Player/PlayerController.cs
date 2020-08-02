@@ -91,12 +91,17 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private void MovementInput()
     {
         Vector3 direction = InputManager.GetInstance.MovementDirection;
-        PositionX += IncrementIndexBy(direction.x);
-        PositionZ += IncrementIndexBy(direction.z);
-        Debug.Log(new Vector2Int(PositionX, PositionZ));
-        Vector3 movement = InputManager.GetInstance.GetMovement(Speed);
-        //controller.Move(movement);
-        transform.position = LevelManager.GetInstance.PlayArea[PositionX, PositionZ].GetWorldPosition(gameObject);
+        int newX = Mathf.Clamp(PositionX + IncrementIndexBy(direction.x),0, LevelManager.GetInstance.PlayArea.GetLength(0) - 1);
+        int newZ = Mathf.Clamp(PositionZ + IncrementIndexBy(direction.z), 0, LevelManager.GetInstance.PlayArea.GetLength(1) - 1);
+        if (!LevelManager.GetInstance.PlayArea[newX, newZ].ExistsEntity())
+        {
+            PositionX += IncrementIndexBy(direction.x);
+            PositionZ += IncrementIndexBy(direction.z);
+            transform.position = LevelManager.GetInstance.PlayArea[PositionX, PositionZ].GetWorldPosition(gameObject);
+        }
+        //Debug.Log(new Vector2Int(PositionX, PositionZ));
+
+
     }
 
     int IncrementIndexBy(float value)
@@ -104,8 +109,8 @@ public class PlayerController : MonoBehaviour, IDamageable {
         return Mathf.Sign(value) == 1 ? (int)Math.Ceiling(value) : (int)Math.Floor(value);
     }
 
-    Vector3 lookAtPos;
-    Quaternion targetRotation;
+    Vector3 lookAtPos = Vector3.zero;
+    Quaternion targetRotation = Quaternion.identity;
 
     private void AimIndicator()
     {
@@ -125,7 +130,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     void FixedUpdate()
     {
-        if (targetRotation == null) return;
+        if (targetRotation == null || Double.IsNaN(targetRotation.w)) return;
         var rotation = Quaternion.Lerp(transform.rotation, targetRotation, 1f);
         aimGameObject.transform.localRotation = rotation;
     }

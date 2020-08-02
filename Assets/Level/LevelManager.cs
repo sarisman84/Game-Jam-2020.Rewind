@@ -75,11 +75,11 @@ public class LevelManager : MonoBehaviour {
                 tile.transform.localScale = new Vector3(0.3f, 1, 0.3f);
 
 
-
+                bool edgeTiles = x == 0 || z == 0 || x == playArea.GetLength(0) - 1 || z == playArea.GetLength(1) - 1;
                 //Enemies
-                if (x % (5 * TileSize) == 0 && z % (5 * TileSize) == 0)
+                if (x % (5) == 1 && z % (5) == 1)
                 {
-                    playArea[x, z].entity = SpawnEnemy(PlayArea[x, z].position).obj;
+                    SpawnEnemy(x,z);
                 }
 
 
@@ -109,9 +109,9 @@ public class LevelManager : MonoBehaviour {
 
     }
 
-    public Enemy SpawnEnemy(Vector2Int location)
+    public Enemy SpawnEnemy(int x, int z)
     {
-        return new Enemy(new Vector3(location.x, floor.transform.position.y + 0.5f, location.y));
+        return new Enemy(new Vector2Int(x, z));
     }
 
     public void SpawnEntity(Tile tile)
@@ -142,6 +142,11 @@ public class LevelManager : MonoBehaviour {
         public bool ExistsEntity()
         {
             return entity != null;
+        }
+
+        public void RemoveEntity()
+        {
+            entity = null;
         }
 
 
