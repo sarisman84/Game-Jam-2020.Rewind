@@ -40,10 +40,10 @@ public class BulletBehaivour : MonoBehaviour
             gameObject.SetActive(false);
 
             //Check if the collider we hit contains a EnemyBehaivour component. If it has, affect the EnemyBehaivour's logic.
-            EnemyBehaviour enemy = collidedObject.gameObject.GetComponent<EnemyBehaviour>();
-            if (enemy != null)
+            IDamageable element = collidedObject.gameObject.GetComponent<IDamageable>();
+            if (element != null)
             {
-                enemy.TakeDamage();
+                element.TakeDamage();
             }
 
 

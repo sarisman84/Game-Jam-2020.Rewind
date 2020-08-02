@@ -7,7 +7,7 @@ public enum ControlSchema { InGame, Menu }
 public class InputManager : InputSchema.IIngameActions
 {
     static InputManager ins;
-    public static InputManager Singleton
+    public static InputManager GetInstance
     {
         get
         {

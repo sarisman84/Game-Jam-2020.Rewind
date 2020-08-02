@@ -7,7 +7,7 @@ using UnityEngine.PlayerLoop;
 
 [RequireComponent(typeof(CharacterController))]
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     // Start is called before the first frame update
     [SerializeField]
@@ -51,19 +51,19 @@ public class PlayerController : MonoBehaviour
 
     private void ShootBullet()
     {
-        if (InputManager.Singleton.IsShooting)
+        if (InputManager.GetInstance.IsShooting)
         {
             BulletBehaivour bullet = ObjectPooler.GetPooledObject<BulletBehaivour>();
             bullet.gameObject.SetActive(true);
             bullet.Setup(aimGameObject);
 
-            InputManager.Singleton.IsShooting = false;
+            InputManager.GetInstance.IsShooting = false;
         }
     }
 
     private void MovementInput()
     {
-        Vector3 movement = InputManager.Singleton.GetMovement(Speed);
+        Vector3 movement = InputManager.GetInstance.GetMovement(Speed);
         controller.Move(movement);
     }
 
@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviour
     {
         //Taken by Can Baycay; https://stackoverflow.com/questions/29457819/how-to-make-a-game-object-point-towards-the-mouse-in-unity-c
         var groundPlane = new Plane(Vector3.up, -transform.position.y);
-        var mouseRay = Camera.main.ScreenPointToRay(InputManager.Singleton.mousePosition);
+        var mouseRay = Camera.main.ScreenPointToRay(InputManager.GetInstance.mousePosition);
         float hitDistance;
 
 
@@ -98,5 +98,10 @@ public class PlayerController : MonoBehaviour
     {
         if (showCursor && Application.isPlaying)
             Gizmos.DrawSphere(lookAtPos, 1);
+    }
+
+    public void TakeDamage()
+    {
+        //PlayerManager.GetInstance.RemoveOneLife();
     }
 }
