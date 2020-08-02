@@ -51,22 +51,22 @@ public static class ObjectPooler {
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns>An inactive gameObject. If all objects in a pool are used, it creates a new active gameObject and adds it into the pool.</returns>
-    public static GameObject GetPoolObject<T> () {
+    public static T GetPoolObject<T> () {
         foreach (KeyValuePair<Type, List<GameObject>> item in dictionaryOfPooledObjects) {
-            if (item.Value[0].GetComponent<T> () != null) {
+            if (item.Key == typeof(T)) {
                 foreach (GameObject element in item.Value) {
                     if (!element.activeSelf)
-                        return element.gameObject;
+                        return element.gameObject.GetComponent<T>();
                 }
 
                 GameObject obj = Object.Instantiate (item.Value[0].gameObject, item.Value[0].gameObject.transform.parent);
                 item.Value.Add (obj);
 
-                return obj;
+                return obj.GetComponent<T>();
 
             }
         }
-        return null;
+        return default(T);
     }
 
 }

@@ -53,10 +53,10 @@ public class PlayerController : MonoBehaviour
     {
         if (InputManager.Singleton.IsShooting)
         {
-            GameObject bullet = ObjectPooler.GetPoolObject<BulletBehaivour>();
-            bullet.transform.position = aimGameObject.transform.GetChild(0).transform.position;
-            bullet.transform.forward = aimGameObject.transform.forward;
-            bullet.SetActive(true);
+            BulletBehaivour bullet = ObjectPooler.GetPoolObject<BulletBehaivour>();
+            bullet.gameObject.SetActive(true);
+            bullet.Setup(aimGameObject);
+
             InputManager.Singleton.IsShooting = false;
         }
     }
