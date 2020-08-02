@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Enemy;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,6 @@ public class BulletBehaivour : MonoBehaviour
     new Rigidbody rigidbody;
 
     float bulletVelocity { get; set; }
-    RaycastHit collisionInfo;
 
 
     Vector3 collisionPosition => transform.position + transform.forward.normalized * (transform.localScale.z + 0.25f);
@@ -26,22 +26,27 @@ public class BulletBehaivour : MonoBehaviour
         //If we have collided with something, affect the bullet
         Collider[] foundColliders = Physics.OverlapSphere(collisionPosition, distanceCheck);
         if (foundColliders == null || foundColliders.Length == 0) return;
-        Collider collidedObject = foundColliders[0];
+        Collider collidedObject = Array.Find(foundColliders, c => c.gameObject != gameObject);
 
         if (collidedObject != null && collidedObject.gameObject != gameObject)
         {
             //Check if the collider we hit contains a BounceTile component. If it has, affect the bullet's velocity so that it bounces of the wall.
-            //collisionInfo.collider.GetComponent<BounceTile>()
+            //collidedObject.gameObject.GetComponent<BounceTile>()
 
 
 
-            //If none of the above conditions are met, disable the bullet.
+
             rigidbody.velocity = Vector3.zero;
             gameObject.SetActive(false);
 
-
             //Check if the collider we hit contains a EnemyBehaivour component. If it has, affect the EnemyBehaivour's logic.
-            //collisionInfo.collider.GetComponent<EnemyBehaivour>();
+            EnemyBehaviour enemy = collidedObject.gameObject.GetComponent<EnemyBehaviour>();
+            if (enemy != null)
+            {
+                enemy.TakeDamage();
+            }
+
+
 
         }
     }

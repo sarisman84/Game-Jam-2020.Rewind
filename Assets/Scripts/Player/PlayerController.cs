@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     {
         if (InputManager.Singleton.IsShooting)
         {
-            BulletBehaivour bullet = ObjectPooler.GetPoolObject<BulletBehaivour>();
+            BulletBehaivour bullet = ObjectPooler.GetPooledObject<BulletBehaivour>();
             bullet.gameObject.SetActive(true);
             bullet.Setup(aimGameObject);
 

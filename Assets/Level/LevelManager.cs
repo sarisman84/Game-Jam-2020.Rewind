@@ -25,15 +25,19 @@ public class LevelManager : MonoBehaviour
         ObjectPooler.PoolGameObject(wallPrefab, 300);
         PlayArea = new Vector2Int[FieldAreaX, FieldAreaZ];
 
-        for (int i = 0; i < FieldAreaX; i++) {
-            for (int ii = 0; ii < FieldAreaZ; ii++) {
+        for (int i = 0; i < FieldAreaX; i++)
+        {
+            for (int ii = 0; ii < FieldAreaZ; ii++)
+            {
                 //walls
-                if (i == 0 || ii == 0 || i == FieldAreaX - 1 || ii == FieldAreaZ - 1) {
-                    GameObject obj = ObjectPooler.GetPoolObject<GameObject>();
-                    obj.gameObject.SetActive(true);
+                if (i == 0 || ii == 0 || i == FieldAreaX - 1 || ii == FieldAreaZ - 1)
+                {
+                    GameObject obj = ObjectPooler.GetPooledObject(wallPrefab.GetInstanceID());
+                    obj.SetActive(true);
                     obj.transform.position = new Vector3(CenterOffsetPositionX(i), floor.transform.position.y + 1f, CenterOffsetPositionY(ii));
                 }
-                else if (i % 5 == 0 && ii % 5 == 0) {
+                else if (i % 5 == 0 && ii % 5 == 0)
+                {
                     SpawnEnemy(new Vector2Int(i - FieldAreaX / 2, ii - FieldAreaZ / 2));
                 }
             }
