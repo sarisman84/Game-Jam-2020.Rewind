@@ -72,7 +72,7 @@ public class InputManager : InputSchema.IIngameActions
     }
 
 
-    Vector3 MovementDirection { set; get; }
+    public Vector3 MovementDirection { set; get; }
 
     public bool IsShooting { get; set; }
     public Vector3 mousePosition { get; internal set; }
@@ -85,6 +85,9 @@ public class InputManager : InputSchema.IIngameActions
     {
         return new Vector3(MovementDirection.x, 0, MovementDirection.y) * Time.deltaTime * speed;
     }
+
+
+    
 
 
 
