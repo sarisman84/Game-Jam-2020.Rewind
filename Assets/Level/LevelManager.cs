@@ -8,7 +8,9 @@ public class LevelManager : MonoBehaviour
 {
     [SerializeField]
     GameObject floor, wallPrefab;
-    private Tile[,] PlayArea;
+    private Tile[,] playArea;
+
+    public Tile[,] PlayArea => playArea;
     //private Tile[,] PlayArea;
     [SerializeField]
     [Range(Int32.MaxValue, 1)]
@@ -20,7 +22,15 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private int FieldAreaZ = 20;
 
-
+    private static LevelManager Instance;
+    public static LevelManager GetInstance
+    {
+        get
+        {
+            Instance = Instance ?? GameObject.FindObjectOfType<LevelManager>() ?? new GameObject("LevelManager").AddComponent<LevelManager>();
+            return Instance;
+        }
+    }
     Vector3 GetPositionCenteredInArr(int x, int z)
     {
         return new Vector3(CenterOffsetPositionX(x), floor.transform.position.y + 1f, CenterOffsetPositionY(z));
@@ -35,9 +45,13 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         ObjectPooler.PoolGameObject(wallPrefab, 300);
-        PlayArea = new Tile[FieldAreaX, FieldAreaZ];
+        playArea = new Tile[FieldAreaX, FieldAreaZ];
 
+        //On move left: -1x
+        //On move right: 1x
 
+        //On move up: 1z
+        //On move down -1z
 
 
         for (int x = 0; x < FieldAreaX; x++)
@@ -118,6 +132,18 @@ public class LevelManager : MonoBehaviour
         {
             get => position;
             set => position = value;
+        }
+
+
+        public Vector3 GetWorldPosition(GameObject obj)
+        {
+            if (entity == null)
+            {
+                entity = obj;
+                return new Vector3(position.x, 0, position.y);
+            }
+            return Vector3.zero;
+
         }
     }
 }
