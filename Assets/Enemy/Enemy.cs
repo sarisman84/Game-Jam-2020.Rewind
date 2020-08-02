@@ -18,7 +18,6 @@ namespace Assets.Enemy {
             obj = newPill;
             LevelManager.GetInstance.PlayArea[index.x, index.y].entity = newPill;
 
-            Debug.Log(LevelManager.GetInstance.PlayArea[index.x, index.y].position);
             currentPos = index;
         }
 
