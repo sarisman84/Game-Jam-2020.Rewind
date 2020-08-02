@@ -4,16 +4,25 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using Cinemachine;
 
 [RequireComponent(typeof(CharacterController))]
 
-public class PlayerController : MonoBehaviour, IDamageable
-{
+public class PlayerController : MonoBehaviour, IDamageable {
     // Start is called before the first frame update
     [SerializeField]
     bool showCursor;
     [SerializeField]
     private float Speed = 1;
+
+    float localTimer;
+    [SerializeField]
+    float movementRate;
+
+    [SerializeField]
+    CinemachineVirtualCamera playerCamera;
+
+
 
 
     [SerializeField]
@@ -31,10 +40,20 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     }
 
+
+
+
     // Update is called once per frame
     void Update()
     {
-        MovementInput();
+        localTimer += Time.deltaTime;
+        localTimer = Mathf.Clamp(localTimer, 0, movementRate);
+        if (localTimer == movementRate)
+        {
+            MovementInput();
+            localTimer = 0;
+        }
+
         AimIndicator();
         ShootBullet();
 
@@ -43,10 +62,12 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void ShootBullet()
     {
-        if (InputManager.GetInstance.IsShooting) {
+        if (InputManager.GetInstance.IsShooting)
+        {
             BulletBehaivour bullet = ObjectPooler.GetPooledObject<BulletBehaivour>();
             bullet.gameObject.SetActive(true);
             bullet.Setup(aimGameObject);
+
 
             InputManager.GetInstance.IsShooting = false;
         }
@@ -57,24 +78,30 @@ public class PlayerController : MonoBehaviour, IDamageable
     public int PositionX
     {
         get { return _PositionX; }
-        set { _PositionX = Mathf.Clamp(value, 0, LevelManager.GetInstance.FieldAreaX); }
+        set { _PositionX = Mathf.Clamp(value, 0, LevelManager.GetInstance.PlayArea.GetLength(0) - 1); }
     }
 
     private int _PositionZ;
     public int PositionZ
     {
         get { return _PositionZ; }
-        set { _PositionZ = Mathf.Clamp(value, 0, LevelManager.GetInstance.FieldAreaZ); }
+        set { _PositionZ = Mathf.Clamp(value, 0, LevelManager.GetInstance.PlayArea.GetLength(1) - 1); }
     }
 
     private void MovementInput()
     {
         Vector3 direction = InputManager.GetInstance.MovementDirection;
-        PositionX += (int)direction.x;
-        PositionZ += (int)direction.y;
+        PositionX += IncrementIndexBy(direction.x);
+        PositionZ += IncrementIndexBy(direction.z);
         Debug.Log(new Vector2Int(PositionX, PositionZ));
         Vector3 movement = InputManager.GetInstance.GetMovement(Speed);
-        controller.Move(movement);
+        //controller.Move(movement);
+        transform.position = LevelManager.GetInstance.PlayArea[PositionX, PositionZ].GetWorldPosition(gameObject);
+    }
+
+    int IncrementIndexBy(float value)
+    {
+        return Mathf.Sign(value) == 1 ? (int)Math.Ceiling(value) : (int)Math.Floor(value);
     }
 
     Vector3 lookAtPos;
@@ -88,7 +115,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         float hitDistance;
 
 
-        if (groundPlane.Raycast(mouseRay, out hitDistance)) {
+        if (groundPlane.Raycast(mouseRay, out hitDistance))
+        {
             lookAtPos = mouseRay.GetPoint(hitDistance);
             targetRotation = Quaternion.LookRotation((lookAtPos - transform.position).normalized, Vector3.up);
 

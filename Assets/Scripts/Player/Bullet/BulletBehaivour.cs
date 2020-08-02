@@ -9,11 +9,11 @@ public class BulletBehaivour : MonoBehaviour
 {
     new Rigidbody rigidbody;
 
-    float bulletVelocity { get; set; }
+    public float bulletVelocity { get; set; }
 
 
     Vector3 collisionPosition => transform.position + transform.forward.normalized * (transform.localScale.z + 0.25f);
-
+    Vector3 originalSize = Vector3.zero;
 
     void FixedUpdate()
     {
@@ -59,6 +59,9 @@ public class BulletBehaivour : MonoBehaviour
 
     public void Setup(GameObject aimGameObject)
     {
+        if (originalSize == Vector3.zero)
+            originalSize = transform.localScale;
+
         rigidbody = rigidbody ?? GetComponent<Rigidbody>();
         rigidbody.useGravity = false;
         rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
@@ -66,6 +69,8 @@ public class BulletBehaivour : MonoBehaviour
         transform.position = aimGameObject.transform.GetChild(1).position;
         transform.forward = aimGameObject.transform.forward;
         bulletVelocity = 10f;
+
+        
 
     }
 }

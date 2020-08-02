@@ -4,8 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviour
-{
+public class LevelManager : MonoBehaviour {
+
+
+    public PlayerController player;
+
     [SerializeField]
     GameObject floor, wallPrefab;
     private Tile[,] playArea;
@@ -13,14 +16,14 @@ public class LevelManager : MonoBehaviour
     public Tile[,] PlayArea => playArea;
     //private Tile[,] PlayArea;
     [SerializeField]
-    [Range(Int32.MaxValue, 1)]
+    [Range(1, 30)]
     private int TileSize = 1;
 
     [SerializeField]
-    public int FieldAreaX = 20;
+    int FieldAreaX = 20;
 
     [SerializeField]
-    public int FieldAreaZ = 20;
+    int FieldAreaZ = 20;
 
     private static LevelManager Instance;
     public static LevelManager GetInstance
@@ -31,7 +34,7 @@ public class LevelManager : MonoBehaviour
             return Instance;
         }
     }
-	
+
     Vector3 GetPositionCenteredInArr(int x, int z)
     {
         return new Vector3(CenterOffsetPositionX(x), floor.transform.position.y + 1f, CenterOffsetPositionY(z));
@@ -39,31 +42,52 @@ public class LevelManager : MonoBehaviour
 
     Vector2Int GetLocationInGrid(int x, int z)
     {
-        return new Vector2Int(x - FieldAreaX / 2, z - FieldAreaZ / 2);
+        return new Vector2Int((x - FieldAreaX / 2), (z - FieldAreaZ / 2));
     }
 
     // Start is called before the first frame update
     void Start()
     {
         ObjectPooler.PoolGameObject(wallPrefab, 300);
-        playArea = new Tile[FieldAreaX, FieldAreaZ];
+        playArea = new Tile[FieldAreaX / TileSize, FieldAreaZ / TileSize];
 
-        for (int x = 0; x < FieldAreaX; x++) {
-            for (int z = 0; z < FieldAreaZ; z++) {
-                PlayArea[x, z].position = GetLocationInGrid(x, z);
+
+
+        for (int x = 0; x < playArea.GetLength(0); x++)
+        {
+            for (int z = 0; z < playArea.GetLength(1); z++)
+            {
+                PlayArea[x, z].position = GetLocationInGrid(x * TileSize, z * TileSize);
                 //walls
-                if (x == 0 || z == 0 || x == FieldAreaX - 1 || z == FieldAreaZ - 1) {
-                    GameObject obj = ObjectPooler.GetPooledObject(wallPrefab.GetInstanceID());
-                    obj.SetActive(true);
-                    obj.transform.position = GetPositionCenteredInArr(x, z);
-                }
-                else if (x % 5 == 0 && z % 5 == 0) {
-                    SpawnEnemy(PlayArea[x, z].position);
+                //if (x == 0 || z == 0 || x == playArea.GetLength(0) - 1 || z == playArea.GetLength(1) - 1)
+                //{
+                //    GameObject obj = ObjectPooler.GetPooledObject(wallPrefab.GetInstanceID());
+                //    obj.SetActive(true);
+                //    obj.transform.position = new Vector3(obj.transform.position.x, obj.transform.position.y, obj.transform.position.z);
+                //    obj.transform.position = playArea[x, z].GetWorldPosition(obj);
+                //    playArea[x, z].entity = obj;
+                //}
+
+
+                GameObject tile = GameObject.CreatePrimitive(PrimitiveType.Plane);
+                Destroy(tile.GetComponent<Collider>());
+                tile.transform.position = playArea[x, z].GetWorldPosition(tile) - new Vector3(0, 0.1f, 0);
+                tile.transform.localScale = new Vector3(0.3f, 1, 0.3f);
+
+
+
+                //Enemies
+                if (x % (5 * TileSize) == 0 && z % (5 * TileSize) == 0)
+                {
+                    playArea[x, z].entity = SpawnEnemy(PlayArea[x, z].position).obj;
                 }
 
 
                 if (!PlayArea[x, z].ExistsEntity())
+                {
                     SpawnEntity(PlayArea[x, z]);
+                }
+
             }
         }
 
@@ -71,12 +95,12 @@ public class LevelManager : MonoBehaviour
 
     private int CenterOffsetPositionY(int ii)
     {
-        return ii - FieldAreaZ / 2;
+        return ii - playArea.GetLength(1) / 2;
     }
 
     private int CenterOffsetPositionX(int i)
     {
-        return i - FieldAreaX / 2;
+        return i - playArea.GetLength(0) / 2;
     }
 
     // Update is called once per frame
@@ -85,9 +109,9 @@ public class LevelManager : MonoBehaviour
 
     }
 
-    public void SpawnEnemy(Vector2Int location)
+    public Enemy SpawnEnemy(Vector2Int location)
     {
-        new Enemy(new Vector3(location.x * TileSize, floor.transform.position.y + 1.5f, location.y * TileSize));
+        return new Enemy(new Vector3(location.x, floor.transform.position.y + 0.5f, location.y));
     }
 
     public void SpawnEntity(Tile tile)
@@ -98,12 +122,19 @@ public class LevelManager : MonoBehaviour
 
     public void OnValidate()
     {
-        FieldAreaX = (int)floor.transform.localScale.x;
-        FieldAreaZ = (int)floor.transform.localScale.z;
+
+        Vector3 size = floor.transform.localScale;
+        size.x = FieldAreaX;
+        size.z = FieldAreaZ;
+        floor.transform.localScale = size;
+
+
+        floor.transform.position = new Vector3(0, -1f, 0);
+
+
     }
 
-    public struct Tile
-    {
+    public struct Tile {
         public Vector2Int position;
         public GameObject entity;
 
@@ -125,10 +156,10 @@ public class LevelManager : MonoBehaviour
         {
             if (entity == null)
             {
-                entity = obj;
-                return new Vector3(position.x, 0, position.y);
+                //                entity = obj;
+                return new Vector3(position.x, obj.transform.position.y, position.y);
             }
-            return Vector3.zero;
+            return obj.transform.position;
 
         }
     }

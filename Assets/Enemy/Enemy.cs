@@ -8,15 +8,15 @@ using UnityEngine;
 
 namespace Assets.Enemy
 {
-    class Enemy
+    public class Enemy
     {
         public Enemy(Vector3 pos)
         {
-            GameObject newBox = GameObject.CreatePrimitive(PrimitiveType.Capsule);//UnityEngine.Object.Instantiate(UnityEngine.GameObject.);
-            EnemyBehaviour enemy = newBox.AddComponent<EnemyBehaviour>();
+            GameObject newPill = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            EnemyBehaviour enemy = newPill.AddComponent<EnemyBehaviour>();
             enemy.onDamageEvent += BasicEffect;
-            newBox.transform.position = pos;
-
+            newPill.transform.position = pos;
+            obj = newPill;
         }
 
         private void BasicEffect(EnemyBehaviour obj)
@@ -24,5 +24,9 @@ namespace Assets.Enemy
             obj.gameObject.SetActive(false);
             obj.onDamageEvent -= BasicEffect;
         }
+
+
+
+        public GameObject obj;
     }
 }
