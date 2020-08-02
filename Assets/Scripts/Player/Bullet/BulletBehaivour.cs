@@ -12,21 +12,28 @@ public class BulletBehaivour : MonoBehaviour
     RaycastHit collisionInfo;
 
 
+    Vector3 collisionPosition => transform.position + transform.forward.normalized * (transform.localScale.z + 0.25f);
+
+
     void FixedUpdate()
     {
         CollisionCheck();
         rigidbody.velocity = transform.forward * bulletVelocity;
     }
 
-    private void CollisionCheck(float distanceCheck = 2f)
+    private void CollisionCheck(float distanceCheck = 0.30f)
     {
         //If we have collided with something, affect the bullet
-        if (Physics.Raycast(transform.position, transform.forward.normalized * distanceCheck, out collisionInfo))
+        Collider[] foundColliders = Physics.OverlapSphere(collisionPosition, distanceCheck);
+        if (foundColliders == null || foundColliders.Length == 0) return;
+        Collider collidedObject = foundColliders[0];
+
+        if (collidedObject != null && collidedObject.gameObject != gameObject)
         {
             //Check if the collider we hit contains a BounceTile component. If it has, affect the bullet's velocity so that it bounces of the wall.
             //collisionInfo.collider.GetComponent<BounceTile>()
 
-           
+
 
             //If none of the above conditions are met, disable the bullet.
             rigidbody.velocity = Vector3.zero;
@@ -37,6 +44,12 @@ public class BulletBehaivour : MonoBehaviour
             //collisionInfo.collider.GetComponent<EnemyBehaivour>();
 
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(collisionPosition, 0.30f);
     }
 
     public void Setup(GameObject aimGameObject)
