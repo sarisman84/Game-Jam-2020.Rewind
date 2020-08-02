@@ -39,30 +39,40 @@ public class PlayerController : MonoBehaviour, IDamageable
         ShootBullet();
 
 
-
-
-
-
-
-
-
-
     }
 
     private void ShootBullet()
     {
-        if (InputManager.GetInstance.IsShooting)
-        {
+        if (InputManager.GetInstance.IsShooting) {
             BulletBehaivour bullet = ObjectPooler.GetPooledObject<BulletBehaivour>();
             bullet.gameObject.SetActive(true);
             bullet.Setup(aimGameObject);
 
             InputManager.GetInstance.IsShooting = false;
         }
+
+    }
+
+    private int _PositionX;
+    public int PositionX
+    {
+        get { return _PositionX; }
+        set { _PositionX = Mathf.Clamp(value, 0, LevelManager.GetInstance.FieldAreaX); }
+    }
+
+    private int _PositionZ;
+    public int PositionZ
+    {
+        get { return _PositionZ; }
+        set { _PositionZ = Mathf.Clamp(value, 0, LevelManager.GetInstance.FieldAreaZ); }
     }
 
     private void MovementInput()
     {
+        Vector3 direction = InputManager.GetInstance.MovementDirection;
+        PositionX += (int)direction.x;
+        PositionZ += (int)direction.y;
+        Debug.Log(new Vector2Int(PositionX, PositionZ));
         Vector3 movement = InputManager.GetInstance.GetMovement(Speed);
         controller.Move(movement);
     }
@@ -78,8 +88,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         float hitDistance;
 
 
-        if (groundPlane.Raycast(mouseRay, out hitDistance))
-        {
+        if (groundPlane.Raycast(mouseRay, out hitDistance)) {
             lookAtPos = mouseRay.GetPoint(hitDistance);
             targetRotation = Quaternion.LookRotation((lookAtPos - transform.position).normalized, Vector3.up);
 

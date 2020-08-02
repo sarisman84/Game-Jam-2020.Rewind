@@ -15,11 +15,19 @@ public class LevelManager : MonoBehaviour
     private int TileSize = 1;
 
     [SerializeField]
-    private int FieldAreaX = 20;
+    public int FieldAreaX = 20;
 
     [SerializeField]
-    private int FieldAreaZ = 20;
+    public int FieldAreaZ = 20;
 
+    private static LevelManager Instance;
+    public static LevelManager GetInstance
+    {
+        get {
+            Instance = Instance ?? GameObject.FindObjectOfType<LevelManager>() ?? new GameObject("LevelManager").AddComponent<LevelManager>();
+            return Instance;
+        }
+    }
 
     Vector3 GetPositionCenteredInArr(int x, int z)
     {
@@ -37,23 +45,16 @@ public class LevelManager : MonoBehaviour
         ObjectPooler.PoolGameObject(wallPrefab, 300);
         PlayArea = new Tile[FieldAreaX, FieldAreaZ];
 
-
-
-
-        for (int x = 0; x < FieldAreaX; x++)
-        {
-            for (int z = 0; z < FieldAreaZ; z++)
-            {
+        for (int x = 0; x < FieldAreaX; x++) {
+            for (int z = 0; z < FieldAreaZ; z++) {
                 PlayArea[x, z].position = GetLocationInGrid(x, z);
                 //walls
-                if (x == 0 || z == 0 || x == FieldAreaX - 1 || z == FieldAreaZ - 1)
-                {
+                if (x == 0 || z == 0 || x == FieldAreaX - 1 || z == FieldAreaZ - 1) {
                     GameObject obj = ObjectPooler.GetPooledObject(wallPrefab.GetInstanceID());
                     obj.SetActive(true);
                     obj.transform.position = GetPositionCenteredInArr(x, z);
                 }
-                else if (x % 5 == 0 && z % 5 == 0)
-                {
+                else if (x % 5 == 0 && z % 5 == 0) {
                     SpawnEnemy(PlayArea[x, z].position);
                 }
 
@@ -97,10 +98,6 @@ public class LevelManager : MonoBehaviour
         FieldAreaX = (int)floor.transform.localScale.x;
         FieldAreaZ = (int)floor.transform.localScale.z;
     }
-
-
-
-
 
     public struct Tile
     {
