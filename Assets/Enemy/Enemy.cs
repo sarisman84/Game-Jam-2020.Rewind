@@ -24,7 +24,7 @@ namespace Assets.Enemy {
         private void BasicEffect(EnemyBehaviour obj)
         {
 
-
+            TimeHandler.GetInstance.ConfirmAllEnemyDeaths();
             LevelManager.GetInstance.PlayArea[currentPos.x, currentPos.y].RemoveEntity();
             
             obj.gameObject.SetActive(false);

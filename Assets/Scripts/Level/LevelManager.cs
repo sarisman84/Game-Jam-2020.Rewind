@@ -25,6 +25,9 @@ public class LevelManager : MonoBehaviour {
     [SerializeField]
     int FieldAreaZ = 20;
 
+
+    List<Enemy> allKnownEnemies = new List<Enemy>();
+
     private static LevelManager Instance;
     public static LevelManager GetInstance
     {
@@ -52,6 +55,8 @@ public class LevelManager : MonoBehaviour {
         playArea = new Tile[FieldAreaX / TileSize, FieldAreaZ / TileSize];
 
         CreateLevel();
+
+        TimeHandler.GetInstance.currentEnemies = allKnownEnemies;
 
         
 
@@ -136,7 +141,9 @@ public class LevelManager : MonoBehaviour {
 
     public Enemy SpawnEnemy(int x, int z)
     {
-        return new Enemy(new Vector2Int(x, z));
+        Enemy enemy = new Enemy(new Vector2Int(x, z));
+        allKnownEnemies.Add(enemy);
+        return enemy;
     }
 
     public void SpawnEntity(Tile tile)

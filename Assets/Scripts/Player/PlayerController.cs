@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     {
         controller = GetComponent<CharacterController>();
         ObjectPooler.PoolGameObject(bulletPrefab, 300);
-
+        TimeHandler.GetInstance.PlayerReference = this;
 
 
     }
@@ -65,14 +65,18 @@ public class PlayerController : MonoBehaviour, IDamageable {
     {
         if (InputManager.GetInstance.IsShooting)
         {
-            BulletBehaivour bullet = ObjectPooler.GetPooledObject<BulletBehaivour>();
-            bullet.gameObject.SetActive(true);
-            bullet.Setup(aimGameObject);
-
-
+            InitializeBullet(aimGameObject.transform.GetChild(1).position, aimGameObject.transform.rotation);
+            TimeHandler.GetInstance.RecordAction(this);
             InputManager.GetInstance.IsShooting = false;
         }
 
+    }
+
+    public void InitializeBullet(Vector3 firePosition, Quaternion fireRotation)
+    {
+        BulletBehaivour bullet = ObjectPooler.GetPooledObject<BulletBehaivour>();
+        bullet.gameObject.SetActive(true);
+        bullet.Setup(firePosition, fireRotation);
     }
 
     private int _PositionX;
@@ -92,7 +96,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private void MovementInput()
     {
         Vector3 direction = InputManager.GetInstance.MovementDirection;
-        int newX = Mathf.Clamp(PositionX + IncrementIndexBy(direction.x),0, LevelManager.GetInstance.PlayArea.GetLength(0) - 1);
+        int newX = Mathf.Clamp(PositionX + IncrementIndexBy(direction.x), 0, LevelManager.GetInstance.PlayArea.GetLength(0) - 1);
         int newZ = Mathf.Clamp(PositionZ + IncrementIndexBy(direction.z), 0, LevelManager.GetInstance.PlayArea.GetLength(1) - 1);
         if (!LevelManager.GetInstance.PlayArea[newX, newZ].ExistsEntity())
         {

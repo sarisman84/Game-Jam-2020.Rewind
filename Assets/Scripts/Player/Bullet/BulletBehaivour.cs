@@ -57,20 +57,17 @@ public class BulletBehaivour : MonoBehaviour
         Gizmos.DrawWireSphere(collisionPosition, 0.30f);
     }
 
-    public void Setup(GameObject aimGameObject)
-    {
-        if (originalSize == Vector3.zero)
-            originalSize = transform.localScale;
+    
 
+
+    public void Setup(Vector3 position, Quaternion rotation)
+    {
         rigidbody = rigidbody ?? GetComponent<Rigidbody>();
         rigidbody.useGravity = false;
         rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 
-        transform.position = aimGameObject.transform.GetChild(1).position;
-        transform.forward = aimGameObject.transform.forward;
+        transform.position = position;
+        transform.rotation = rotation;
         bulletVelocity = 10f;
-
-        
-
     }
 }
