@@ -4,7 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviour {
+public class LevelManager : MonoBehaviour
+{
 
 
     public PlayerController player;
@@ -53,7 +54,7 @@ public class LevelManager : MonoBehaviour {
 
         CreateLevel();
 
-        
+
 
     }
 
@@ -62,26 +63,13 @@ public class LevelManager : MonoBehaviour {
         Transform floorParent = CreateParent("Floor");
         Transform enemyParent = CreateParent("Enemies");
 
-
-
+        CreateWalls();
 
         for (int x = 0; x < playArea.GetLength(0); x++)
         {
             for (int z = 0; z < playArea.GetLength(1); z++)
             {
                 PlayArea[x, z].position = GetLocationInGrid(x * TileSize, z * TileSize);
-
-
-                //walls
-                //if (x == 0 || z == 0 || x == playArea.GetLength(0) - 1 || z == playArea.GetLength(1) - 1)
-                //{
-                //    GameObject obj = ObjectPooler.GetPooledObject(wallPrefab.GetInstanceID());
-                //    obj.SetActive(true);
-                //    obj.transform.position = new Vector3(obj.transform.position.x, obj.transform.position.y, obj.transform.position.z);
-                //    obj.transform.position = playArea[x, z].GetWorldPosition(obj);
-                //    playArea[x, z].entity = obj;
-                //}
-
 
                 CreateFloorTile(x, z, floorParent);
 
@@ -101,6 +89,26 @@ public class LevelManager : MonoBehaviour {
             }
         }
     }
+
+
+    private void CreateWalls()
+    {
+        GameObject wallNorth = CreateNewWall(0, FieldAreaZ / 2, FieldAreaX, 1, "North");
+        GameObject wallEast = CreateNewWall(-FieldAreaX / 2, 0, 1, FieldAreaZ, "East");
+        GameObject wallSouth = CreateNewWall(0, -FieldAreaZ / 2, FieldAreaX, 1, "South");
+        GameObject wallWest = CreateNewWall(FieldAreaX / 2, 0, 1, FieldAreaZ, "West");
+    }
+
+    private GameObject CreateNewWall(int x, int z, int length, int width, string name)
+    {
+        GameObject obj = ObjectPooler.GetPooledObject(wallPrefab.GetInstanceID());
+        obj.SetActive(true);
+        obj.transform.localScale = new Vector3(length, 1, width);
+        obj.transform.position = new Vector3(x - TileSize * 0.7f, 0, z - TileSize * 0.7f);
+        obj.name = name;
+        return obj;
+    }
+
 
     private Transform CreateParent(string v)
     {
@@ -159,7 +167,8 @@ public class LevelManager : MonoBehaviour {
 
     }
 
-    public struct Tile {
+    public struct Tile
+    {
         public Vector2Int position;
         public GameObject entity;
 
