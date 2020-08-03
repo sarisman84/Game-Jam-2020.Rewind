@@ -51,6 +51,18 @@ public class LevelManager : MonoBehaviour {
         ObjectPooler.PoolGameObject(wallPrefab, 300);
         playArea = new Tile[FieldAreaX / TileSize, FieldAreaZ / TileSize];
 
+        CreateLevel();
+
+        
+
+    }
+
+    private void CreateLevel()
+    {
+        Transform floorParent = CreateParent("Floor");
+        Transform enemyParent = CreateParent("Enemies");
+
+
 
 
         for (int x = 0; x < playArea.GetLength(0); x++)
@@ -58,6 +70,8 @@ public class LevelManager : MonoBehaviour {
             for (int z = 0; z < playArea.GetLength(1); z++)
             {
                 PlayArea[x, z].position = GetLocationInGrid(x * TileSize, z * TileSize);
+
+
                 //walls
                 //if (x == 0 || z == 0 || x == playArea.GetLength(0) - 1 || z == playArea.GetLength(1) - 1)
                 //{
@@ -69,17 +83,13 @@ public class LevelManager : MonoBehaviour {
                 //}
 
 
-                GameObject tile = GameObject.CreatePrimitive(PrimitiveType.Plane);
-                Destroy(tile.GetComponent<Collider>());
-                tile.transform.position = playArea[x, z].GetWorldPosition(tile) - new Vector3(0, 0.1f, 0);
-                tile.transform.localScale = new Vector3(0.3f, 1, 0.3f);
-
+                CreateFloorTile(x, z, floorParent);
 
                 bool edgeTiles = x == 0 || z == 0 || x == playArea.GetLength(0) - 1 || z == playArea.GetLength(1) - 1;
                 //Enemies
                 if (x % (5) == 1 && z % (5) == 1)
                 {
-                    SpawnEnemy(x,z);
+                    SpawnEnemy(x, z).obj.transform.SetParent(enemyParent);
                 }
 
 
@@ -90,7 +100,22 @@ public class LevelManager : MonoBehaviour {
 
             }
         }
+    }
 
+    private Transform CreateParent(string v)
+    {
+        Transform s = new GameObject(v).transform;
+        s.SetParent(transform);
+        return s;
+    }
+
+    private void CreateFloorTile(int x, int z, Transform floorParent)
+    {
+        GameObject tile = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        Destroy(tile.GetComponent<Collider>());
+        tile.transform.position = playArea[x, z].GetWorldPosition(tile) - new Vector3(0, 0.5f, 0);
+        tile.transform.localScale = new Vector3(0.3f, 1, 0.3f);
+        tile.transform.SetParent(floorParent);
     }
 
     private int CenterOffsetPositionY(int ii)
