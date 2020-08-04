@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<linker>
+  <assembly fullname="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+    <type fullname="Microsoft.CodeDom.Providers.DotNetCompilerPlatform" preserve="all" />
+  </assembly>
+  <assembly fullname="Westwing">
+    <type fullname="Westwind.Scripting" preserve="all" />
+  </assembly>
+</linker>

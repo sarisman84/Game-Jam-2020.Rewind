@@ -146,7 +146,7 @@ public class LevelManager : MonoBehaviour
 
     public Enemy SpawnEnemy(int x, int z)
     {
-        Enemy enemy = new Enemy(new Vector2Int(x, z));
+        Enemy enemy = new Enemy(new Vector2Int(x, z), "Enemy");
         allKnownEnemies.Add(enemy);
         return enemy;
     }

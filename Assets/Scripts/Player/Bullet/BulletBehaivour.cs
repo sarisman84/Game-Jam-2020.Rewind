@@ -60,7 +60,7 @@ public class BulletBehaivour : MonoBehaviour
     
 
 
-    public void Setup(Vector3 position, Quaternion rotation)
+    public void Setup(Vector3 position, Quaternion rotation, float bulletVelocity = 25f)
     {
         rigidbody = rigidbody ?? GetComponent<Rigidbody>();
         rigidbody.useGravity = false;
@@ -68,6 +68,6 @@ public class BulletBehaivour : MonoBehaviour
 
         transform.position = position;
         transform.rotation = rotation;
-        bulletVelocity = 10f;
+        this.bulletVelocity = bulletVelocity;
     }
 }
