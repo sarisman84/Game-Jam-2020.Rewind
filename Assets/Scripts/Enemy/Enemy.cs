@@ -10,27 +10,37 @@ using Westwind.Scripting;
 
 namespace Assets.Enemy {
     public class Enemy {
-        Vector2Int currentPos;
-        public Enemy(Vector2Int index, string resourcePrefabPath)
+        public Vector2Int spawnIndex;
+        
+        string modelPath;
+        public Enemy(string modelPath)
         {
-
-
-            GameObject newPill = Object.Object.Instantiate(Resources.Load<GameObject>($"Enemies/{resourcePrefabPath}"));
-
-            EnemyBehaviour enemy = newPill.AddComponent<EnemyBehaviour>();
-            enemy.onDamageEvent += DamageEvent;
-            enemy.onStartEvent += StartEvent;
-            enemy.onUpdateEvent += UpdateEvent;
-
-            newPill.transform.position = LevelManager.GetInstance.PlayArea[index.x, index.y].GetWorldPosition(newPill);
-            obj = newPill;
-            LevelManager.GetInstance.PlayArea[index.x, index.y].entity = newPill;
-
-            currentPos = index;
-
-
+            this.modelPath = modelPath;
             
         }
+
+        public EnemyBehaviour SpawnEnemy(Vector3 spawnPos, Vector2Int index)
+        {
+            EnemyBehaviour enemy = ObjectPooler.GetPooledObject(Resources.Load<EnemyBehaviour>($"Enemies/{modelPath}"));
+
+            enemy.parentClass = this;
+            enemy.AssignEvents(this);
+            enemy.spawnPos = spawnPos;
+            enemy.transform.position = spawnPos;
+            enemy.gameObject.SetActive(true);
+            LevelManager.GetInstance.PlayArea[spawnIndex.x, spawnIndex.y].entity = enemy.gameObject;
+
+
+
+
+
+
+        
+            spawnIndex = index;
+            return enemy;
+        }
+
+       
 
         public virtual void UpdateEvent(EnemyBehaviour obj)
         {
@@ -47,10 +57,13 @@ namespace Assets.Enemy {
         {
 
             TimeHandler.GetInstance.ConfirmAllEnemyDeaths();
-            LevelManager.GetInstance.PlayArea[currentPos.x, currentPos.y].RemoveEntity();
+
 
             obj.gameObject.SetActive(false);
             obj.onDamageEvent -= DamageEvent;
+            obj.onStartEvent -= StartEvent;
+            obj.onUpdateEvent -= UpdateEvent;
+
 
 
         }
@@ -77,6 +90,6 @@ namespace Assets.Enemy {
                 Debug.LogWarning(script.ErrorMessage);
         }
 
-        public GameObject obj;
+
     }
 }

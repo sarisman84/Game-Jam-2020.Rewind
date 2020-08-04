@@ -3,6 +3,7 @@ using Assets.Enemy;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class LevelManager : MonoBehaviour {
 
@@ -26,22 +27,46 @@ public class LevelManager : MonoBehaviour {
     int FieldAreaZ = 20;
 
 
-    List<Enemy> allKnownEnemies = new List<Enemy>();
+    public WaveManager waveManager;
 
-    private static LevelManager Instance;
-    public static LevelManager GetInstance
+
+    //new Vector2Int(Random.Range(0, playArea.GetLength(0) - 1), Random.Range(0, playArea.GetLength(1) - 1))
+    public Vector3 GetGetRandomGridPosition<A>() where A : IEquatable<A>
     {
-        get
+        player = player ?? FindObjectOfType<PlayerController>();
+
+        A a = default(A);
+        if (a is Vector3 pos)
         {
+            pos = playArea[Random.Range(0, playArea.GetLength(0) - 1), Random.Range(0, playArea.GetLength(1) - 1)].GetWorldPosition();
 
-            return Instance;
+            return pos;
         }
+        else if (a is Vector2Int vector)
+        {
+            int attemps = 0;
+            while (vector == Vector2Int.zero)
+            {
+                vector = new Vector2Int(Random.Range(0, playArea.GetLength(0) - 1), Random.Range(0, playArea.GetLength(1) - 1));
+                Vector2Int playerPos = new Vector2Int(player.PositionX, player.PositionZ);
+                float distanceToPlayer = (playerPos - vector).magnitude;
+
+                if (playArea[vector.x, vector.y].ExistsEntity()) vector = Vector2Int.zero;
+                attemps++;
+                if (attemps == 30)
+                {
+                    break;
+                }
+            }
+            return new Vector3(vector.x, vector.y);
+        }
+
+        return Vector3.zero;
     }
 
-    void Awake()
-    {
-        Instance = Instance ?? GameObject.FindObjectOfType<LevelManager>() ?? new GameObject("LevelManager").AddComponent<LevelManager>();
-    }
+    public static LevelManager GetInstance { get; private set; }
+
+    void Awake() => GetInstance = GetInstance ?? FindObjectOfType<LevelManager>() ?? new GameObject("LevelManager").AddComponent<LevelManager>();
 
     Vector3 GetPositionCenteredInArr(int x, int z)
     {
@@ -56,12 +81,15 @@ public class LevelManager : MonoBehaviour {
     // Start is called before the first frame update
     void Start()
     {
+        waveManager = new WaveManager(this);
         ObjectPooler.PoolGameObject(wallPrefab, 300);
         playArea = new Tile[FieldAreaX / TileSize, FieldAreaZ / TileSize];
 
         CreateLevel();
 
-        TimeHandler.GetInstance.currentEnemies = allKnownEnemies;
+
+
+        StartCoroutine(waveManager.DeployFirstWave(3, 0, new Enemy("Enemy"), new Enemy("Enemy"), new Enemy("Enemy")));
     }
 
     private void CreateLevel()
@@ -83,10 +111,10 @@ public class LevelManager : MonoBehaviour {
 
                 bool edgeTiles = x == 0 || z == 0 || x == playArea.GetLength(0) - 1 || z == playArea.GetLength(1) - 1;
                 //Enemies
-                if (x % (5) == 1 && z % (5) == 1)
-                {
-                    SpawnEnemy(x, z).obj.transform.SetParent(enemyParent);
-                }
+                //if (x % (5) == 1 && z % (5) == 1)
+                //{
+                //    SpawnEnemy(x, z).model.transform.SetParent(enemyParent);
+                //}
 
 
                 if (!PlayArea[x, z].ExistsEntity())
@@ -97,8 +125,8 @@ public class LevelManager : MonoBehaviour {
             }
         }
 
-        
-            
+
+
     }
 
 
@@ -153,12 +181,12 @@ public class LevelManager : MonoBehaviour {
 
     }
 
-    public Enemy SpawnEnemy(int x, int z)
-    {
-        Enemy enemy = new Enemy(new Vector2Int(x, z), "Enemy");
-        allKnownEnemies.Add(enemy);
-        return enemy;
-    }
+    //public Enemy SpawnEnemy(int x, int z)
+    //{
+    //    Enemy enemy = new Enemy(new Vector2Int(x, z), "Enemy");
+    //    allKnownEnemies.Add(enemy);
+    //    return enemy;
+    //}
 
     public void SpawnEntity(Tile tile)
     {
@@ -203,13 +231,15 @@ public class LevelManager : MonoBehaviour {
         }
 
 
-        public Vector3 GetWorldPosition(GameObject obj)
+        public Vector3 GetWorldPosition(GameObject obj = null)
         {
             if (entity == null)
             {
-                //                entity = obj;
+                if (obj == null)
+                    return new Vector3(position.x, 0, position.y);
                 return new Vector3(position.x, obj.transform.position.y, position.y);
             }
+            if (obj == null) return Vector3.zero;
             return obj.transform.position;
 
         }

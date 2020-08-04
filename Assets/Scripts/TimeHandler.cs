@@ -8,7 +8,8 @@ using UnityEngine.SocialPlatforms;
 
 public class TimeHandler {
 
-    Queue<RecordedAction> allRecordedActions = new Queue<RecordedAction>();
+    LinkedList<RecordedAction> allRecordedActions = new LinkedList<RecordedAction>();
+    public int latestList { get; set; } = 0;
 
     //Singleton pattern
     static TimeHandler instance;
@@ -37,30 +38,25 @@ public class TimeHandler {
 
     public void RecordAction(PlayerController player)
     {
+        
         RecordedAction action = new RecordedAction(player.transform.position, player.aimGameObject.transform.GetChild(1).position, player.aimGameObject.transform.rotation, Time.time);
+        
+       
 
-        //The queue is "full"
-        //Dequeue()
-
-        //if (allRecordedActions.Count == 3)
-        //{
-        //    RecordedAction oldAction = allRecordedActions.Dequeue();
-        //    oldAction.playerClone.SetActive(false);
-        //}
 
 
 
         //Add position and rotation of the player to a list.
-        allRecordedActions.Enqueue(action);
+        allRecordedActions.AddFirst(action);
 
         CreatePlayerGhost(PlayerReference, action);
-
+        //STOP CRASHING
     }
 
     public void ConfirmAllEnemyDeaths()
     {
 
-        if (currentEnemies.FindAll(e => e.obj.activeSelf == true).Count == 1)
+        if (LevelManager.GetInstance.waveManager.areAllEnemiesDead)
         {
 
             PlayerReference.StartCoroutine(PlayRecordedActions(PlayerReference));
@@ -84,31 +80,57 @@ public class TimeHandler {
 
 
     }
-
+    int index = 0;
+    bool[] areRewindsDone;
     public IEnumerator PlayRecordedActions(PlayerController player)
     {
+        yield return null;
+        areRewindsDone = new bool[allRecordedActions.Count];
+        index = 0;
 
-        int index = 0;
-        int count = allRecordedActions.Count;
-        float previousTimeSinceFired = Time.time, delay = 0;
-
-        while (index < count)
-        {
-            RecordedAction action = allRecordedActions.Dequeue();
-
-            //yield return new WaitForSeconds(Mathf.Min(delay, 5f));
-            //Dequeue
-            yield return new WaitForSeconds(0.25f);
-            delay = Mathf.Abs(previousTimeSinceFired - action.timeSinceFired);
-            player.InitializeBullet(action.playerFirePosition, action.playerAimRotation);
-            index++;
-
-            previousTimeSinceFired = action.timeSinceFired;
-            allRecordedActions.Enqueue(action);
-            Debug.Log($"Current Delay: {delay}");
-
-        }
+        yield return PlayRecordedActionsOfListElement(allRecordedActions, player, 0.5f);
+        player.StartCoroutine(LevelManager.GetInstance.waveManager.DeployNextWave());
+        player.ResetPositionToSpawn();
     }
+
+    private bool AreRewindsDone()
+    {
+        return false;
+    }
+
+    IEnumerator PlayRecordedActionsOfListElement(LinkedList<RecordedAction> queue, PlayerController player, float initialDelay)
+    {
+
+
+        LinkedListNode<RecordedAction> node = queue.First;
+        float reductionAmm = 0.05f;
+
+        while (node != null)
+        {
+
+
+
+
+            yield return new WaitForSeconds(initialDelay);
+
+            RecordedAction action = node.Value;
+            player.InitializeBullet(action.playerFirePosition, action.playerAimRotation);
+
+
+            node = node.Next;
+            initialDelay -= reductionAmm;
+            initialDelay = Mathf.Clamp(initialDelay, 0, float.MaxValue);
+            reductionAmm -= 0.005f;
+            reductionAmm = Mathf.Clamp(reductionAmm, 0.01f, float.MaxValue);
+        }
+
+        areRewindsDone[this.index] = true;
+        this.index++;
+        this.index = Mathf.Clamp(index, 0, areRewindsDone.Length - 1);
+        yield return null;
+
+    }
+
 
 
     /// <summary>
@@ -129,7 +151,7 @@ public class TimeHandler {
             timeSinceFired = _timeSinceFired;
 
 
-            Debug.Log($"Time of firing: {timeSinceFired}");
+
 
         }
     }

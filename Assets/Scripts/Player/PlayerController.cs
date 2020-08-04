@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.PlayerLoop;
 using Cinemachine;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(Rigidbody))]
 
 public class PlayerController : MonoBehaviour, IDamageable {
     // Start is called before the first frame update
@@ -22,52 +22,64 @@ public class PlayerController : MonoBehaviour, IDamageable {
     [SerializeField]
     CinemachineVirtualCamera playerCamera;
 
-
+    PlayerManager manager;
 
 
     [SerializeField]
     BulletBehaivour bulletPrefab;
 
-    CharacterController controller;
+    Rigidbody controller;
 
 
     public GameObject aimGameObject;
     private void Awake()
     {
-        controller = GetComponent<CharacterController>();
+        controller = GetComponent<Rigidbody>();
         ObjectPooler.PoolGameObject(bulletPrefab, 300);
         TimeHandler.GetInstance.PlayerReference = this;
+        manager = new PlayerManager(this);
+        manager.SetLifeAmount(3);
 
         //Move the player to the middle of the field.
-        
+
 
     }
 
-    void Start()
+    public void ResetPositionToSpawn()
     {
         _PositionX = (LevelManager.GetInstance.PlayArea.GetLength(0) - 1) / 2;
         _PositionZ = (LevelManager.GetInstance.PlayArea.GetLength(1) - 1) / 2;
 
         //Used to center the player on the grid at the start of the game.
-        MoveWithinGrid();
+        StartCoroutine(MoveWithinGrid());
+    }
+
+    void Start()
+    {
+        ResetPositionToSpawn();
     }
     // Update is called once per frame
     void Update()
     {
 
-        NormalMovement();
-       // GridMovement();
 
-        AimIndicator();
-        ShootBullet();
+        // GridMovement();
+        if (!isResetting)
+        {
+            AimIndicator();
+            ShootBullet();
+        }
+       
 
 
     }
 
+
     private void NormalMovement()
     {
-        Vector3 movementDirection = InputManager.GetInstance.movementInput * Time.deltaTime * Speed;
-        controller.Move(movementDirection);
+        Vector3 movementDirection = InputManager.GetInstance.movementInput * Speed;
+        if (movementDirection == Vector3.zero) controller.velocity = Vector3.Lerp(controller.velocity, Vector3.zero, 0.1f);
+        controller.velocity += movementDirection;
 
     }
 
@@ -114,22 +126,24 @@ public class PlayerController : MonoBehaviour, IDamageable {
         set { _PositionZ = Mathf.Clamp(value, 0, LevelManager.GetInstance.PlayArea.GetLength(1) - 1); }
     }
 
+    bool isResetting = false;
+
     /// <summary>
     /// Moves the player within a grid by incrementing 2 indexes that are used for a 2D array.
     /// </summary>
-    private void MoveWithinGrid()
+    /// 
+    private IEnumerator MoveWithinGrid()
     {
-        Vector3 direction = InputManager.GetInstance.movementInput;
-        int newX = Mathf.Clamp(PositionX + IncrementIndexBy(direction.x), 0, LevelManager.GetInstance.PlayArea.GetLength(0) - 1);
-        int newZ = Mathf.Clamp(PositionZ + IncrementIndexBy(direction.z), 0, LevelManager.GetInstance.PlayArea.GetLength(1) - 1);
-        if (!LevelManager.GetInstance.PlayArea[newX, newZ].ExistsEntity())
+
+        Vector3 newPos = LevelManager.GetInstance.PlayArea[PositionX, PositionZ].GetWorldPosition(gameObject);
+        while (!newPos.IsWithinRadiusOf(transform.position, 3f))
         {
-            PositionX += IncrementIndexBy(direction.x);
-            PositionZ += IncrementIndexBy(direction.z);
-            transform.position = LevelManager.GetInstance.PlayArea[PositionX, PositionZ].GetWorldPosition(gameObject);
+            yield return new WaitForEndOfFrame();
+            transform.position = Vector3.Lerp(transform.position, newPos, 4f * Time.deltaTime);
+            isResetting = true;
         }
-
-
+        isResetting = false;
+        yield return null;
 
     }
 
@@ -159,6 +173,8 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     void FixedUpdate()
     {
+        if (!isResetting)
+            NormalMovement();
         if (targetRotation == null || double.IsNaN(targetRotation.w)) return;
         var rotation = Quaternion.Lerp(transform.rotation, targetRotation, 1f);
         aimGameObject.transform.localRotation = rotation;
@@ -173,6 +189,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     public void TakeDamage()
     {
-        //PlayerManager.GetInstance.RemoveOneLife();
+        if (!isResetting)
+            manager.LooseOneLife();
     }
 }

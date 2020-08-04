@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Assets.Enemy;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SocialPlatforms;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyBehaviour : MonoBehaviour, IDamageable {
@@ -11,7 +13,12 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
     public event Action<EnemyBehaviour> onStartEvent;
     public event Action<EnemyBehaviour> onUpdateEvent;
 
+    public Enemy parentClass;
+    
 
+    public Vector3 spawnPos { private get; set; }
+
+    public bool activeSelf => gameObject.activeSelf;
     public bool overrideUpdate { private get; set; }
     public float enemySpeed { private get; set; } = 3.5f;
     public float turningSpeed { private get; set; } = 120f;
@@ -28,9 +35,12 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
     {
         onStartEvent?.Invoke(this);
     }
-
+    float attackDelay = 1.5f, localTimer;
     private void Update()
     {
+        localTimer += Time.deltaTime;
+        localTimer = Mathf.Clamp(localTimer, 0, attackDelay);
+        
         if (overrideUpdate)
         {
             onUpdateEvent?.Invoke(this);
@@ -42,7 +52,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
     }
     NavMeshAgent agent;
     PlayerController player;
-    private void SetNavMeshTarget()
+    public void SetNavMeshTarget()
     {
         agent = agent ?? GetComponent<NavMeshAgent>();
         player = player ?? FindObjectOfType<PlayerController>();
@@ -50,6 +60,33 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
         agent.speed = enemySpeed;
         agent.angularSpeed = turningSpeed;
 
-        agent.SetDestination(player.transform.position);
+        if ((player.transform.position - transform.position).magnitude > 3f)
+        {
+            agent.isStopped = false;
+            agent.SetDestination(player.transform.position);
+        }
+
+        else
+        {
+            agent.isStopped = true;
+            if (localTimer == attackDelay)
+            {
+                player.TakeDamage();
+                localTimer = 0;
+            }
+           
+        }
+    }
+
+    public void AssignEvents(Enemy enemy)
+    {
+        onDamageEvent += enemy.DamageEvent;
+        onStartEvent += enemy.StartEvent;
+        onUpdateEvent += enemy.UpdateEvent;
+    }
+
+    public void ResetPositionToSpawn()
+    {
+        transform.position = spawnPos;
     }
 }
