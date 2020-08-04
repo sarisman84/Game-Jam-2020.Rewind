@@ -110,6 +110,18 @@ public static class ObjectPooler
         return default(T);
     }
 
+
+    public static T GetPooledObject<T>(T prefab) where T:MonoBehaviour
+    {
+        T result = GetPooledObject<T>();
+        if (result != null)
+        {
+            return result;
+        }
+        PoolGameObject(prefab, 300);
+        return GetPooledObject<T>();
+    }
+
     /// <summary>
     ///  Gets the first inactive gameObject from a pool of gameObjects by searching using a prefab instance ID.
     /// </summary>

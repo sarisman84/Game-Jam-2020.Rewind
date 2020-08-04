@@ -42,11 +42,12 @@ public class TimeHandler {
         //The queue is "full"
         //Dequeue()
 
-        if (allRecordedActions.Count == 3)
-        {
-            RecordedAction oldAction = allRecordedActions.Dequeue();
-            oldAction.playerClone.SetActive(false);
-        }
+        //if (allRecordedActions.Count == 3)
+        //{
+        //    RecordedAction oldAction = allRecordedActions.Dequeue();
+        //    oldAction.playerClone.SetActive(false);
+        //}
+
 
 
         //Add position and rotation of the player to a list.
@@ -71,15 +72,16 @@ public class TimeHandler {
     void CreatePlayerGhost(PlayerController player, RecordedAction action)
     {
         //Visualise said position and rotation with a model.
-        action.playerClone = UnityEngine.Object.Instantiate(player.gameObject, replayList);
-        action.playerClone.GetComponent<PlayerController>().enabled = false;
-        action.playerClone.GetComponent<Collider>().enabled = false;
+        action.playerClone = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Player/Rewind Player Clone"), replayList);
+
+        //action.playerClone.GetComponent<PlayerController>().enabled = false;
+        //action.playerClone.GetComponents<Collider>().ExecuteAction(c => c.enabled = false);
+
         action.playerClone.transform.position = action.playerPosition;
+        action.playerClone.transform.GetChild(0).rotation = action.playerAimRotation;
 
-        action.playerClone.transform.GetChild(1).rotation = action.playerAimRotation;
 
 
-        
 
     }
 
@@ -88,16 +90,19 @@ public class TimeHandler {
 
         int index = 0;
         int count = allRecordedActions.Count;
-        float previousTimeSinceFired = Time.time, delay;
+        float previousTimeSinceFired = Time.time, delay = 0;
 
         while (index < count)
         {
-            //Dequeue
             RecordedAction action = allRecordedActions.Dequeue();
+
+            //yield return new WaitForSeconds(Mathf.Min(delay, 5f));
+            //Dequeue
+            yield return new WaitForSeconds(0.25f);
             delay = Mathf.Abs(previousTimeSinceFired - action.timeSinceFired);
             player.InitializeBullet(action.playerFirePosition, action.playerAimRotation);
             index++;
-            yield return new WaitForSeconds(Mathf.Min(delay, 5f));
+
             previousTimeSinceFired = action.timeSinceFired;
             allRecordedActions.Enqueue(action);
             Debug.Log($"Current Delay: {delay}");

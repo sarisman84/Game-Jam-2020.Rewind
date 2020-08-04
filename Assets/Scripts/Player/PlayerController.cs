@@ -38,27 +38,48 @@ public class PlayerController : MonoBehaviour, IDamageable {
         ObjectPooler.PoolGameObject(bulletPrefab, 300);
         TimeHandler.GetInstance.PlayerReference = this;
 
+        //Move the player to the middle of the field.
+        
 
     }
 
+    void Start()
+    {
+        _PositionX = (LevelManager.GetInstance.PlayArea.GetLength(0) - 1) / 2;
+        _PositionZ = (LevelManager.GetInstance.PlayArea.GetLength(1) - 1) / 2;
 
-
-
+        //Used to center the player on the grid at the start of the game.
+        MoveWithinGrid();
+    }
     // Update is called once per frame
     void Update()
     {
-        localTimer += Time.deltaTime;
-        localTimer = Mathf.Clamp(localTimer, 0, movementRate);
-        if (localTimer == movementRate)
-        {
-            MovementInput();
-            localTimer = 0;
-        }
+
+        NormalMovement();
+       // GridMovement();
 
         AimIndicator();
         ShootBullet();
 
 
+    }
+
+    private void NormalMovement()
+    {
+        Vector3 movementDirection = InputManager.GetInstance.movementInput * Time.deltaTime * Speed;
+        controller.Move(movementDirection);
+
+    }
+
+    private void GridMovement()
+    {
+        localTimer += Time.deltaTime;
+        localTimer = Mathf.Clamp(localTimer, 0, movementRate);
+        if (localTimer == movementRate)
+        {
+            MoveWithinGrid();
+            localTimer = 0;
+        }
     }
 
     private void ShootBullet()
@@ -93,9 +114,12 @@ public class PlayerController : MonoBehaviour, IDamageable {
         set { _PositionZ = Mathf.Clamp(value, 0, LevelManager.GetInstance.PlayArea.GetLength(1) - 1); }
     }
 
-    private void MovementInput()
+    /// <summary>
+    /// Moves the player within a grid by incrementing 2 indexes that are used for a 2D array.
+    /// </summary>
+    private void MoveWithinGrid()
     {
-        Vector3 direction = InputManager.GetInstance.MovementDirection;
+        Vector3 direction = InputManager.GetInstance.movementInput;
         int newX = Mathf.Clamp(PositionX + IncrementIndexBy(direction.x), 0, LevelManager.GetInstance.PlayArea.GetLength(0) - 1);
         int newZ = Mathf.Clamp(PositionZ + IncrementIndexBy(direction.z), 0, LevelManager.GetInstance.PlayArea.GetLength(1) - 1);
         if (!LevelManager.GetInstance.PlayArea[newX, newZ].ExistsEntity())
@@ -104,7 +128,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
             PositionZ += IncrementIndexBy(direction.z);
             transform.position = LevelManager.GetInstance.PlayArea[PositionX, PositionZ].GetWorldPosition(gameObject);
         }
-        //Debug.Log(new Vector2Int(PositionX, PositionZ));
+
 
 
     }
@@ -135,7 +159,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     void FixedUpdate()
     {
-        if (targetRotation == null || Double.IsNaN(targetRotation.w)) return;
+        if (targetRotation == null || double.IsNaN(targetRotation.w)) return;
         var rotation = Quaternion.Lerp(transform.rotation, targetRotation, 1f);
         aimGameObject.transform.localRotation = rotation;
     }

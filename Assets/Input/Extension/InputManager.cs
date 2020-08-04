@@ -55,7 +55,7 @@ public class InputManager : InputSchema.IIngameActions
 
     public void OnMovement(InputAction.CallbackContext context)
     {
-        MovementDirection = new Vector3(context.ReadValue<Vector2>().x, 0, context.ReadValue<Vector2>().y);
+        movementInput = new Vector3(context.ReadValue<Vector2>().x, 0, context.ReadValue<Vector2>().y);
     }
 
     public void OnShoot(InputAction.CallbackContext context)
@@ -72,7 +72,7 @@ public class InputManager : InputSchema.IIngameActions
     }
 
 
-    public Vector3 MovementDirection { set; get; }
+    public Vector3 movementInput { set; get; }
 
     public bool IsShooting { get; set; }
     public Vector3 mousePosition { get; internal set; }
@@ -83,7 +83,7 @@ public class InputManager : InputSchema.IIngameActions
 
     public Vector3 GetMovement(float speed)
     {
-        return MovementDirection * Time.deltaTime * speed;
+        return movementInput * Time.deltaTime * speed;
     }
 
 

@@ -4,8 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviour
-{
+public class LevelManager : MonoBehaviour {
 
 
     public PlayerController player;
@@ -34,9 +33,14 @@ public class LevelManager : MonoBehaviour
     {
         get
         {
-            Instance = Instance ?? GameObject.FindObjectOfType<LevelManager>() ?? new GameObject("LevelManager").AddComponent<LevelManager>();
+
             return Instance;
         }
+    }
+
+    void Awake()
+    {
+        Instance = Instance ?? GameObject.FindObjectOfType<LevelManager>() ?? new GameObject("LevelManager").AddComponent<LevelManager>();
     }
 
     Vector3 GetPositionCenteredInArr(int x, int z)
@@ -57,15 +61,17 @@ public class LevelManager : MonoBehaviour
 
         CreateLevel();
 
-        TimeHandler.GetInstance.currentEnemies = allKnownEnemies;        
+        TimeHandler.GetInstance.currentEnemies = allKnownEnemies;
     }
 
     private void CreateLevel()
     {
-        Transform floorParent = CreateParent("Floor");
+        //Transform floorParent = CreateParent("Floor");
         Transform enemyParent = CreateParent("Enemies");
 
         CreateWalls();
+
+
 
         for (int x = 0; x < playArea.GetLength(0); x++)
         {
@@ -73,7 +79,7 @@ public class LevelManager : MonoBehaviour
             {
                 PlayArea[x, z].position = GetLocationInGrid(x * TileSize, z * TileSize);
 
-                CreateFloorTile(x, z, floorParent);
+                //CreateFloorTile(x, z, floorParent);
 
                 bool edgeTiles = x == 0 || z == 0 || x == playArea.GetLength(0) - 1 || z == playArea.GetLength(1) - 1;
                 //Enemies
@@ -90,6 +96,9 @@ public class LevelManager : MonoBehaviour
 
             }
         }
+
+        
+            
     }
 
 
@@ -160,10 +169,10 @@ public class LevelManager : MonoBehaviour
     public void OnValidate()
     {
 
-        Vector3 size = floor.transform.localScale;
-        size.x = FieldAreaX;
-        size.z = FieldAreaZ;
-        floor.transform.localScale = size;
+        //Vector3 size = floor.transform.localScale;
+        //size.x = FieldAreaX;
+        //size.z = FieldAreaZ;
+        //floor.transform.localScale = size;
 
 
         floor.transform.position = new Vector3(0, -1f, 0);
@@ -171,8 +180,7 @@ public class LevelManager : MonoBehaviour
 
     }
 
-    public struct Tile
-    {
+    public struct Tile {
         public Vector2Int position;
         public GameObject entity;
 
