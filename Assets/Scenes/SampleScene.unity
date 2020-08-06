@@ -283,6 +283,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 111422648295846969, guid: e39a4aee075876e4a80cc6f845a82e13, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 111422648295846969, guid: e39a4aee075876e4a80cc6f845a82e13, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 111422648295846969, guid: e39a4aee075876e4a80cc6f845a82e13, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 111422648295846969, guid: e39a4aee075876e4a80cc6f845a82e13, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1131486142}
+    - target: {fileID: 111422648295846969, guid: e39a4aee075876e4a80cc6f845a82e13, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MenuScript, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 111422648295846969, guid: e39a4aee075876e4a80cc6f845a82e13, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CloseGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 111422648295846969, guid: e39a4aee075876e4a80cc6f845a82e13, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 111422648457965603, guid: e39a4aee075876e4a80cc6f845a82e13, type: 3}
       propertyPath: m_Name
       value: GameOver
@@ -507,6 +535,7 @@ GameObject:
   - component: {fileID: 1131486140}
   - component: {fileID: 1131486139}
   - component: {fileID: 1131486141}
+  - component: {fileID: 1131486142}
   m_Layer: 0
   m_Name: Effects Manager
   m_TagString: Untagged
@@ -650,6 +679,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1131486142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131486138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29bcc295814ca6a49b6e575ed31b343d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1680220037
 GameObject:
   m_ObjectHideFlags: 0
@@ -797,6 +838,14 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1606052245765101516, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1680220038}
+    - target: {fileID: 1606052245765101516, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CreateLevel
+      objectReference: {fileID: 0}
     - target: {fileID: 1606052245765101517, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
       propertyPath: m_LocalScale.x
       value: 1
@@ -808,6 +857,18 @@ PrefabInstance:
     - target: {fileID: 1606052245765101517, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
       propertyPath: m_LocalScale.z
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3316632801479469523, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1131486142}
+    - target: {fileID: 3316632801479469523, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CloseGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 3316632801479469523, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: MenuScript, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 8031619137335358422, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
       propertyPath: m_LocalScale.x
