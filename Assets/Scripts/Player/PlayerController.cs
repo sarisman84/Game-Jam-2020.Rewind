@@ -170,6 +170,14 @@ public class PlayerController : MonoBehaviour, IDamageable {
         yield return null;
         EffectsManager.GetInstance.CurrentBackgroundMusic.time = 0;
         EffectsManager.GetInstance.CurrentBackgroundMusic.pitch = 1;
+        FindObjectsOfType<BulletBehaivour>().ExecuteAction(b =>
+        {
+
+            b.physics.velocity = Vector3.zero;
+            b.gameObject.SetActive(false);
+            EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("EnemyDeath", b.transform.position);
+        }
+        );
 
     }
 
@@ -217,5 +225,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     {
         if (!isResetting && !godMode)
             manager.LooseOneLife();
+        bullet.physics.velocity = Vector3.zero;
+        bullet.gameObject.SetActive(false);
     }
 }

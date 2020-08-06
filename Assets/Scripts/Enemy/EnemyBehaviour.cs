@@ -48,6 +48,14 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
         agent.speed = enemySpeed;
         agent.angularSpeed = turningSpeed;
     }
+
+    private void OnEnable()
+    {
+        onStartEvent?.Invoke(this);
+        if (agent == null) return;
+        agent.speed = enemySpeed;
+        agent.angularSpeed = turningSpeed;
+    }
     float attackDelay = 1.5f, localTimer;
     private void Update()
     {
