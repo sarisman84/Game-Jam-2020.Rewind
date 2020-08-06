@@ -96,10 +96,11 @@ public class LevelManager : MonoBehaviour {
 
 
 
-        StartCoroutine(waveManager.DeployFirstWave(1, 0.05f, new Enemy("Enemy"), new Enemy("Enemy"), new Enemy("Enemy")));
+       
     }
 
-    private void CreateLevel()
+    //By calling this method, the game starts.
+    public void CreateLevel()
     {
         //Transform floorParent = CreateParent("Floor");
         Transform enemyParent = CreateParent("Enemies");
@@ -132,7 +133,7 @@ public class LevelManager : MonoBehaviour {
             }
         }
 
-
+        StartCoroutine(waveManager.DeployFirstWave(1, 0.05f, new Enemy("Enemy"), new Enemy("Enemy"), new Enemy("Enemy")));
 
     }
 
