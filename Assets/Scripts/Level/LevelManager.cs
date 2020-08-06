@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using TMPro;
+using System.Linq;
 
 public class LevelManager : MonoBehaviour {
 
@@ -40,7 +41,7 @@ public class LevelManager : MonoBehaviour {
     //new Vector2Int(Random.Range(0, playArea.GetLength(0) - 1), Random.Range(0, playArea.GetLength(1) - 1))
     public Vector3 GetGetRandomGridPosition<A>() where A : IEquatable<A>
     {
-        player = player ?? FindObjectOfType<PlayerController>();
+
 
         A a = default(A);
         if (a is Vector3 pos)
@@ -88,24 +89,40 @@ public class LevelManager : MonoBehaviour {
     // Start is called before the first frame update
     void Start()
     {
+        player = player ?? FindObjectOfType<PlayerController>();
+        player.gameObject.SetActive(false);
         waveManager = new WaveManager(this, waveScreen, debugScreen);
         ObjectPooler.PoolGameObject(wallPrefab, 300);
         playArea = new Tile[FieldAreaX / TileSize, FieldAreaZ / TileSize];
 
-        CreateLevel();
 
 
 
-       
+
     }
 
     //By calling this method, the game starts.
     public void CreateLevel()
     {
         //Transform floorParent = CreateParent("Floor");
-        Transform enemyParent = CreateParent("Enemies");
+        StartCoroutine(_CreateLevel());
 
+    }
+
+    private IEnumerator _CreateLevel()
+    {
+        Transform enemyParent = CreateParent("Enemies");
+        if (waveManager.allSpawnedEnemies.Count != 0)
+        {
+            waveManager.allSpawnedEnemies.ExecuteAction(e => e.gameObject.SetActive(false)).ToList().Clear();
+            waveManager.allCustomTiles.ExecuteAction(t => t.gameObject.SetActive(false)).ToList().Clear();
+            TimeHandler.GetInstance.ClearRecordings();
+
+        }
+        EffectsManager.GetInstance.CurrentBackgroundMusic.pitch = 1;
+        waveManager.WaveCounter.text = "";
         CreateWalls();
+        player.manager.RevivePlayer();
 
 
 
@@ -132,11 +149,9 @@ public class LevelManager : MonoBehaviour {
 
             }
         }
-
-        StartCoroutine(waveManager.DeployFirstWave(1, 0.05f, new Enemy("Enemy"), new Enemy("Enemy"), new Enemy("Enemy")));
-
+        yield return new WaitForSeconds(1.5f);
+        yield return waveManager.DeployFirstWave(1, 0.05f, new Enemy("Enemy"), new Enemy("Enemy"), new Enemy("Enemy"));
     }
-
 
     private void CreateWalls()
     {
@@ -164,14 +179,7 @@ public class LevelManager : MonoBehaviour {
         return s;
     }
 
-    private void CreateFloorTile(int x, int z, Transform floorParent)
-    {
-        GameObject tile = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        Destroy(tile.GetComponent<Collider>());
-        tile.transform.position = playArea[x, z].GetWorldPosition(tile) - new Vector3(0, 0.5f, 0);
-        tile.transform.localScale = new Vector3(0.3f, 1, 0.3f);
-        tile.transform.SetParent(floorParent);
-    }
+
 
     private int CenterOffsetPositionY(int ii)
     {

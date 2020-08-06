@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     [SerializeField]
     CinemachineVirtualCamera playerCamera;
 
-    PlayerManager manager;
+    public PlayerManager manager;
 
 
     [SerializeField]
@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
         ObjectPooler.PoolGameObject(bulletPrefab, 300);
         TimeHandler.GetInstance.PlayerReference = this;
         manager = new PlayerManager(this);
-        manager.SetLifeAmount(3);
+
 
         //Move the player to the middle of the field.
 
@@ -225,6 +225,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     {
         if (!isResetting && !godMode)
             manager.LooseOneLife();
+        if (bullet == null) return;
         bullet.physics.velocity = Vector3.zero;
         bullet.gameObject.SetActive(false);
     }

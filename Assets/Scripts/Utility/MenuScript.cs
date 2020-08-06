@@ -1,22 +1,49 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public class MenuScript : MonoBehaviour
-{
-
-    // Use this for initialization
-    void Start()
+public class MenuScript : MonoBehaviour {
+    static MenuScript ins;
+    public GameObject gameOverUI, mainMenuUI;
+    public static MenuScript GetInstance
     {
-
+        get
+        {
+            ins = ins ?? FindObjectOfType<MenuScript>() ?? new GameObject("Menu Manager").AddComponent<MenuScript>();
+            return ins;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
 
+
+    private void Awake()
+    {
+        gameOverUI.SetActive(false);
+        mainMenuUI.SetActive(true);
     }
 
-    public void CloseGame() {
+
+
+    public void CloseGame()
+    {
         Application.Quit();
+    }
+
+    public void GameOver()
+    {
+        gameOverUI.SetActive(true);
+
+        StartCoroutine(LowerPitch());
+       
+    }
+
+    private IEnumerator LowerPitch()
+    {
+        AudioSource player = EffectsManager.GetInstance.CurrentBackgroundMusic;
+        while (player.pitch > 0.2f)
+        {
+            player.pitch = Mathf.Lerp(player.pitch, 0.1f, 0.025f);
+            yield return new WaitForEndOfFrame();
+        }
     }
 }

@@ -141,6 +141,12 @@ public class TimeHandler {
 
     }
 
+    public void ClearRecordings()
+    {
+        allRecordedActions.ExecuteAction(r => UnityEngine.Object.Destroy(r.playerClone));
+        allRecordedActions.Clear();
+    }
+
 
 
     /// <summary>

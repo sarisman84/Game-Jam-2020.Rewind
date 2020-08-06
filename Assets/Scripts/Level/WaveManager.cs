@@ -18,6 +18,8 @@ public class WaveManager {
 
     TMP_Text waveCounter;
 
+    public TMP_Text WaveCounter => waveCounter;
+
     TMP_Text debugScreen;
 
     public bool areAllEnemiesDead
@@ -49,7 +51,7 @@ public class WaveManager {
 
     public IEnumerator DeployFirstWave<E>(int amountOfEnemies, float spawnDelay, params E[] enemyTypes) where E : Enemy
     {
-
+        currentWave = 0;
         foreach (var item in enemyTypes)
         {
             for (int i = 0; i < amountOfEnemies; i++)

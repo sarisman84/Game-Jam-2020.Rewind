@@ -15,13 +15,14 @@ public class PlayerManager {
         originalColor = renderer.sharedMaterial.color;
         originalEmissiveColor = renderer.sharedMaterial.GetColor(emissiveColor);
 
-      
+
     }
 
-    int amountOfLives;
+    int maxAmountOfLives, amountOfLives;
     public void SetLifeAmount(int ammount)
     {
-        amountOfLives = ammount;
+        maxAmountOfLives = ammount;
+        amountOfLives = maxAmountOfLives;
         VisualiseHealth();
     }
 
@@ -66,6 +67,7 @@ public class PlayerManager {
     private void KillPlayer()
     {
         behaivour.gameObject.SetActive(false);
+        MenuScript.GetInstance.GameOver();
         onPlayerDeath?.Invoke();
     }
 
@@ -73,5 +75,8 @@ public class PlayerManager {
     {
         behaivour.gameObject.SetActive(true);
         behaivour.ResetPositionToSpawn();
+        if (maxAmountOfLives == 0) SetLifeAmount(3);
+
+        amountOfLives = maxAmountOfLives;
     }
 }
