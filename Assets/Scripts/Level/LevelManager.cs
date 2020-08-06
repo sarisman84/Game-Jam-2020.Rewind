@@ -96,7 +96,7 @@ public class LevelManager : MonoBehaviour {
 
 
 
-        StartCoroutine(waveManager.DeployFirstWave(1, 0.05f, new Enemy("Enemy"), new Enemy("Enemy"), new Enemy("Enemy")));
+        StartCoroutine(waveManager.DeployFirstWave(1, 0.05f, new Annoy_O_Tron("Enemy"), new Annoy_O_Tron("Enemy"), new Annoy_O_Tron("Enemy")));
     }
 
     private void CreateLevel()

@@ -71,6 +71,9 @@ public class WaveManager {
     {
         TimeHandler.GetInstance.latestList++;
 
+        allEnemyTypes.Clear();
+        allEnemyTypes.Add(new Annoy_O_Tron());
+
         yield return new WaitForSeconds(1.35f);
 
 
