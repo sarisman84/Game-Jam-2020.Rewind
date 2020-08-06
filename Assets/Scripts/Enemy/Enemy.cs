@@ -41,12 +41,13 @@ public class Enemy : Entity {
 
     }
 
-    public virtual void DamageEvent(EnemyBehaviour obj)
+    public virtual void DamageEvent(EnemyBehaviour obj, BulletBehaivour bullet)
     {
         obj.gameObject.SetActive(false);
         TimeHandler.GetInstance.ConfirmAllEnemyDeaths();
 
-
+        bullet.physics.velocity = Vector3.zero;
+        bullet.gameObject.SetActive(false);
 
         obj.onDamageEvent -= DamageEvent;
         obj.onStartEvent -= StartEvent;

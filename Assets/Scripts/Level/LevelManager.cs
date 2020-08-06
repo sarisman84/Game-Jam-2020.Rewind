@@ -14,7 +14,7 @@ public class LevelManager : MonoBehaviour {
     [SerializeField]
     GameObject floor;
     [SerializeField]
-    EntityBehaviour wallPrefab;
+    GameObject wallPrefab;
     private Tile[,] playArea;
 
     public Tile[,] PlayArea => playArea;
@@ -139,15 +139,15 @@ public class LevelManager : MonoBehaviour {
 
     private void CreateWalls()
     {
-        EntityBehaviour wallNorth = CreateNewWall(0, FieldAreaZ / 2, FieldAreaX, 1, "North");
-        EntityBehaviour wallEast = CreateNewWall(-FieldAreaX / 2, 0, 1, FieldAreaZ, "East");
-        EntityBehaviour wallSouth = CreateNewWall(0, -FieldAreaZ / 2, FieldAreaX, 1, "South");
-        EntityBehaviour wallWest = CreateNewWall(FieldAreaX / 2, 0, 1, FieldAreaZ, "West");
+        GameObject wallNorth = CreateNewWall(0, FieldAreaZ / 2, FieldAreaX, 1, "North");
+        GameObject wallEast = CreateNewWall(-FieldAreaX / 2, 0, 1, FieldAreaZ, "East");
+        GameObject wallSouth = CreateNewWall(0, -FieldAreaZ / 2, FieldAreaX, 1, "South");
+        GameObject wallWest = CreateNewWall(FieldAreaX / 2, 0, 1, FieldAreaZ, "West");
     }
 
-    private EntityBehaviour CreateNewWall(int x, int z, int length, int width, string name)
+    private GameObject CreateNewWall(int x, int z, int length, int width, string name)
     {
-        EntityBehaviour obj = ObjectPooler.GetPooledObject<EntityBehaviour>(wallPrefab.GetInstanceID());
+        GameObject obj = ObjectPooler.GetPooledObject(wallPrefab.GetInstanceID());
         obj.gameObject.SetActive(true);
         obj.transform.localScale = new Vector3(length, 1, width);
         obj.transform.position = new Vector3(x - TileSize * 0.7f, 0, z - TileSize * 0.7f);

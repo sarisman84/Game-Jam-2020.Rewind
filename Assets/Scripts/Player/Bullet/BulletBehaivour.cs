@@ -11,6 +11,9 @@ public class BulletBehaivour : MonoBehaviour {
     public float bulletVelocity { get; set; }
 
     public Rigidbody physics => rigidbody;
+    public Vector3 lastKnownVelocity { get; private set; }
+
+    public Vector3 currentVelocity { private get; set; }
     Vector3 collisionPosition => transform.position + transform.forward.normalized * (transform.localScale.z + 0.25f);
     Vector3 originalSize = Vector3.zero;
 
@@ -23,8 +26,15 @@ public class BulletBehaivour : MonoBehaviour {
     {
         if (rigidbody != null)
         {
+            if (currentVelocity != Vector3.zero)
+                rigidbody.velocity = currentVelocity * bulletVelocity;
+            else
+                rigidbody.velocity = transform.forward * bulletVelocity;
 
-            rigidbody.velocity = transform.forward * bulletVelocity;
+            if (rigidbody.velocity != Vector3.zero)
+            {
+                lastKnownVelocity = rigidbody.velocity;
+            }
         }
 
     }
@@ -33,30 +43,24 @@ public class BulletBehaivour : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
+
         if (collision == null)
         {
-            rigidbody.velocity = Vector3.zero;
-            gameObject.SetActive(false);
+
             return;
         }
-       
         ContactPoint = collision;
-        if (onCollisionEvent == null)
-        {
-            rigidbody.velocity = Vector3.zero;
-            gameObject.SetActive(false);
-        }
-        else
-        {
-            onCollisionEvent.Invoke(this);
-        }
-
         IDamageable element = collision.gameObject.GetComponent<IDamageable>();
         if (element != null)
         {
             element.TakeDamage(this);
         }
 
+    }
+
+    public void ResetOnCollisionEvent()
+    {
+        onCollisionEvent = null;
     }
 
     private void Update()
@@ -82,6 +86,8 @@ public class BulletBehaivour : MonoBehaviour {
         rigidbody.useGravity = false;
         rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
 
+
+        currentVelocity = Vector3.zero;
         transform.position = position;
         transform.rotation = rotation;
         this.bulletVelocity = bulletVelocity;

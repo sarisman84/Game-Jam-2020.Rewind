@@ -19,19 +19,20 @@ public class BouncyWall : Entity {
     }
     public override void DamageEvent(EntityBehaviour obj, BulletBehaivour incomingBullet)
     {
-        void p(BulletBehaivour bullet)
-        {
-            Collision contactPoint = incomingBullet.ContactPoint;
-            if (contactPoint == null) return;
-            var speed = 10f;
-            Debug.Log(contactPoint.contacts[0]);
-            var direction = Vector3.Reflect(incomingBullet.physics.velocity, contactPoint.contacts[0].normal);
 
-            incomingBullet.physics.velocity = direction * speed;
-            incomingBullet.onCollisionEvent -= p;
-        }
 
-        incomingBullet.onCollisionEvent += p;
+        Collision contactPoint = incomingBullet.ContactPoint;
+
+        if (contactPoint.gameObject.GetComponent<EntityBehaviour>() != obj) return;
+
+        var direction = Vector3.Reflect(incomingBullet.lastKnownVelocity.normalized, contactPoint.contacts[0].normal);
+
+        incomingBullet.currentVelocity = direction.normalized;
+
+
+
+
+
 
 
     }

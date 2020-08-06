@@ -9,7 +9,7 @@ using UnityEngine.SocialPlatforms;
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyBehaviour : MonoBehaviour, IDamageable {
     // Start is called before the first frame update
-    public event Action<EnemyBehaviour> onDamageEvent;
+    public event Action<EnemyBehaviour, BulletBehaivour> onDamageEvent;
     public event Action<EnemyBehaviour> onStartEvent;
     public event Action<EnemyBehaviour> onUpdateEvent;
 
@@ -28,7 +28,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
 
     public void TakeDamage(BulletBehaivour bullet)
     {
-        onDamageEvent?.Invoke(this);
+        onDamageEvent?.Invoke(this, bullet);
         EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt(onDeathParticle, transform.position);
     }
 

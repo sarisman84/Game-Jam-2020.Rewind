@@ -30,6 +30,12 @@ public class EntityBehaviour : MonoBehaviour, IDamageable {
 
     public void TakeDamage(BulletBehaivour bullet)
     {
-        onDamageEvent?.Invoke(this, bullet);
+        if(onDamageEvent == null)
+        {
+            bullet.physics.velocity = Vector3.zero;
+            bullet.gameObject.SetActive(false);
+            return;
+        }
+        onDamageEvent.Invoke(this, bullet);
     }
 }
