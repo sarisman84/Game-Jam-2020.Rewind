@@ -65,6 +65,7 @@ public class WaveManager {
         }
 
         currentWave++;
+        Debug.Log($"Current Wave (at DeployFirstWave):{currentWave}");
         waveCounter.text = $"Wave:{currentWave}";
     }
 
@@ -75,6 +76,10 @@ public class WaveManager {
 
         yield return new WaitForSeconds(1.35f);
 
+        Annoy_O_Tron tron = new Annoy_O_Tron();
+        CarpetBomber bomber = new CarpetBomber();
+        AddEnemyType(bomber, 6);
+        AddEnemyType(tron, 3);
 
         IEnumerator p(EnemyBehaviour e)
         {
@@ -92,7 +97,7 @@ public class WaveManager {
 
         IEnumerator x(Enemy e)
         {
-            int amm = Random.Range(0, 2);
+            int amm = Random.Range(0, 4);
             for (int i = 0; i < amm; i++)
             {
                 yield return CreateEnemyAtRandomPosition(e, 0.05f);
@@ -104,10 +109,20 @@ public class WaveManager {
         yield return allEnemyTypes.ExecuteAction(x);
 
         currentWave++;
+        Debug.Log($"Current Wave (at DeployNextWave):{currentWave}");
         waveCounter.text = $"Wave:{currentWave}";
 
 
 
+    }
+
+    private void AddEnemyType<E>(E enemy, int minWaveSpawn) where E : Enemy
+    {
+        if (!allEnemyTypes.Contains(enemy))
+            if (currentWave == minWaveSpawn)
+            {
+                allEnemyTypes.Add(enemy);
+            }
     }
 
     private IEnumerator CreateEntityAtRandomPosition(float v)

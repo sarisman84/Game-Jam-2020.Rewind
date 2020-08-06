@@ -27,7 +27,7 @@ public class TimeHandler {
 
     Transform replayList;
 
-    public List<Enemy> currentEnemies { private get; set; }
+
 
     public PlayerController PlayerReference { private get; set; }
 
@@ -54,14 +54,15 @@ public class TimeHandler {
         CreatePlayerGhost(PlayerReference, action);
         //STOP CRASHING
     }
-
+    Coroutine rewind, nextWave;
     public void ConfirmAllEnemyDeaths()
     {
 
         if (LevelManager.GetInstance.waveManager.areAllEnemiesDead)
         {
-
-            PlayerReference.StartCoroutine(PlayRecordedActions(PlayerReference));
+            if (rewind != null)
+                PlayerReference.StopCoroutine(rewind);
+            rewind = PlayerReference.StartCoroutine(PlayRecordedActions(PlayerReference));
 
 
         }
@@ -91,7 +92,9 @@ public class TimeHandler {
         index = 0;
 
         yield return PlayRecordedActionsOfListElement(allRecordedActions, player, 0.5f);
-        player.StartCoroutine(LevelManager.GetInstance.waveManager.DeployNextWave());
+        if (nextWave != null)
+            player.StopCoroutine(nextWave);
+        nextWave = player.StartCoroutine(LevelManager.GetInstance.waveManager.DeployNextWave());
         player.ResetPositionToSpawn();
 
     }
@@ -129,13 +132,13 @@ public class TimeHandler {
 
 
         }
-        if(areRewindsDone.Length != 0)
+        if (areRewindsDone.Length != 0)
         {
             areRewindsDone[this.index] = true;
             this.index++;
             this.index = Mathf.Clamp(index, 0, areRewindsDone.Length - 1);
         }
-        
+
         yield return null;
 
 

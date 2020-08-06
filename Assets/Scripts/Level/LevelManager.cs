@@ -150,7 +150,7 @@ public class LevelManager : MonoBehaviour {
             }
         }
         yield return new WaitForSeconds(1.5f);
-        yield return waveManager.DeployFirstWave(1, 0.05f, new Enemy("Enemy"), new Enemy("Enemy"), new Enemy("Enemy"));
+        yield return waveManager.DeployFirstWave(2, 0.05f, new Enemy("Enemy"));
     }
 
     private void CreateWalls()

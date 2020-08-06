@@ -40,6 +40,7 @@ public class MenuScript : MonoBehaviour {
     private IEnumerator LowerPitch()
     {
         AudioSource player = EffectsManager.GetInstance.CurrentBackgroundMusic;
+        player.pitch = 1;
         while (player.pitch > 0.2f)
         {
             player.pitch = Mathf.Lerp(player.pitch, 0.1f, 0.025f);

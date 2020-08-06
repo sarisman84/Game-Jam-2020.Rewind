@@ -33,7 +33,8 @@ public class CarpetBomber : Enemy {
 
         obj.enemySpeed = 5f;
         obj.turningSpeed = 10f;
-        obj.transform.rotation = Quaternion.LookRotation((obj.transform.position - obj.foundPlayer.transform.position).normalized, Vector3.up);
+        if (obj != null && obj.foundPlayer != null)
+            obj.transform.rotation = Quaternion.LookRotation((obj.transform.position - obj.foundPlayer.transform.position).normalized, Vector3.up);
         previousPosition = Vector3.zero;
 
 
