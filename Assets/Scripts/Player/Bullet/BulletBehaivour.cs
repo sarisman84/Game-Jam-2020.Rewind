@@ -33,7 +33,13 @@ public class BulletBehaivour : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision == null || rigidbody == null) return;
+        if (collision == null)
+        {
+            rigidbody.velocity = Vector3.zero;
+            gameObject.SetActive(false);
+            return;
+        }
+       
         ContactPoint = collision;
         if (onCollisionEvent == null)
         {
@@ -55,10 +61,7 @@ public class BulletBehaivour : MonoBehaviour {
 
     private void Update()
     {
-        if (rigidbody.velocity == Vector3.zero)
-        {
-            gameObject.SetActive(false);
-        }
+
     }
 
     private void OnDrawGizmos()
