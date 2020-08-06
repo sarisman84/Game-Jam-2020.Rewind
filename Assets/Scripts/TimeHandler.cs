@@ -129,10 +129,13 @@ public class TimeHandler {
 
 
         }
-
-        areRewindsDone[this.index] = true;
-        this.index++;
-        this.index = Mathf.Clamp(index, 0, areRewindsDone.Length - 1);
+        if(areRewindsDone.Length != 0)
+        {
+            areRewindsDone[this.index] = true;
+            this.index++;
+            this.index = Mathf.Clamp(index, 0, areRewindsDone.Length - 1);
+        }
+        
         yield return null;
 
 

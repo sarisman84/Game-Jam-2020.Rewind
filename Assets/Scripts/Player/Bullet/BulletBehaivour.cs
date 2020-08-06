@@ -19,8 +19,8 @@ public class BulletBehaivour : MonoBehaviour {
 
     public Collision ContactPoint { private set; get; }
 
-    public event Action<BulletBehaivour> onCollisionEvent;
-    public event Action<BulletBehaivour> onDisableEvent;
+
+    public event Action<BulletBehaivour> onUpdateEvent;
 
     void FixedUpdate()
     {
@@ -58,14 +58,11 @@ public class BulletBehaivour : MonoBehaviour {
 
     }
 
-    public void ResetOnCollisionEvent()
-    {
-        onCollisionEvent = null;
-    }
+
 
     private void Update()
     {
-
+        onUpdateEvent?.Invoke(this);
     }
 
     private void OnDrawGizmos()
@@ -74,10 +71,7 @@ public class BulletBehaivour : MonoBehaviour {
         Gizmos.DrawWireSphere(collisionPosition, 0.30f);
     }
 
-    private void OnDisable()
-    {
-        onDisableEvent?.Invoke(this);
-    }
+
 
 
     public void Setup(Vector3 position, Quaternion rotation, float bulletVelocity = 25f)
