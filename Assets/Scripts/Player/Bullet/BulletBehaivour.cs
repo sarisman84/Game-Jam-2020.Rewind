@@ -17,6 +17,7 @@ public class BulletBehaivour : MonoBehaviour {
     public Collision ContactPoint { private set; get; }
 
     public event Action<BulletBehaivour> onCollisionEvent;
+    public event Action<BulletBehaivour> onDisableEvent;
 
     void FixedUpdate()
     {
@@ -52,6 +53,14 @@ public class BulletBehaivour : MonoBehaviour {
 
     }
 
+    private void Update()
+    {
+        if (rigidbody.velocity == Vector3.zero)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -60,7 +69,7 @@ public class BulletBehaivour : MonoBehaviour {
 
     private void OnDisable()
     {
-        
+        onDisableEvent?.Invoke(this);
     }
 
 

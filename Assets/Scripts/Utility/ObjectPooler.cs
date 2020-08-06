@@ -138,7 +138,7 @@ public static class ObjectPooler {
             return result;
         }
         PoolGameObject(prefab, 300);
-        return GetPooledObject<T>();
+        return GetPooledObject<T>(prefab.GetInstanceID());
     }
 
 
