@@ -55,6 +55,8 @@ public static class ObjectPooler {
 
         List<GameObject> poolofObjects = new List<GameObject>();
 
+        if (prefab == null) return;
+
         Transform parent = new GameObject($"{prefab.gameObject.name}'s list").transform;
         if (dictionaryOfPooledObjects.ContainsKey(prefab.GetInstanceID()))
         {
@@ -115,7 +117,7 @@ public static class ObjectPooler {
     }
 
 
-   
+
 
 
     public static T GetPooledObject<T>(T prefab) where T : MonoBehaviour

@@ -10,6 +10,8 @@ using Random = UnityEngine.Random;
 [RequireComponent(typeof(Rigidbody))]
 
 public class PlayerController : MonoBehaviour, IDamageable {
+
+    public LevelManager levelManager;
     // Start is called before the first frame update
     [SerializeField]
     bool showCursor;
@@ -58,8 +60,8 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     void Start()
     {
-        _PositionX = (LevelManager.GetInstance.PlayArea.GetLength(0) - 1) / 2;
-        _PositionZ = (LevelManager.GetInstance.PlayArea.GetLength(1) - 1) / 2;
+        _PositionX = (levelManager.PlayArea.GetLength(0) - 1) / 2;
+        _PositionZ = (levelManager.PlayArea.GetLength(1) - 1) / 2;
 
         ResetPositionToSpawn();
     }

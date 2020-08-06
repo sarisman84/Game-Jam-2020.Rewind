@@ -12,23 +12,23 @@ public class LevelManager : MonoBehaviour {
 
     public PlayerController player;
 
-    [SerializeField]
-    GameObject floor;
-    [SerializeField]
-    GameObject wallPrefab;
-    private Tile[,] playArea;
+
+    public GameObject floor;
+
+    public GameObject wallPrefab;
+    public Tile[,] playArea;
 
     public Tile[,] PlayArea => playArea;
     //private Tile[,] PlayArea;
-    [SerializeField]
+
     [Range(1, 30)]
-    private int TileSize = 1;
+    public int TileSize = 1;
+
+
+    public int FieldAreaX = 71;
 
     [SerializeField]
-    int FieldAreaX = 20;
-
-    [SerializeField]
-    int FieldAreaZ = 20;
+    public int FieldAreaZ = 51;
 
 
     public TMP_Text debugScreen;
@@ -41,7 +41,7 @@ public class LevelManager : MonoBehaviour {
     //new Vector2Int(Random.Range(0, playArea.GetLength(0) - 1), Random.Range(0, playArea.GetLength(1) - 1))
     public Vector3 GetGetRandomGridPosition<A>() where A : IEquatable<A>
     {
-
+        if (playArea == null) return Vector3.zero;
 
         A a = default(A);
         if (a is Vector3 pos)
@@ -72,9 +72,24 @@ public class LevelManager : MonoBehaviour {
         return Vector3.zero;
     }
 
-    public static LevelManager GetInstance { get; private set; }
-
-    void Awake() => GetInstance = GetInstance ?? FindObjectOfType<LevelManager>() ?? new GameObject("LevelManager").AddComponent<LevelManager>();
+    static LevelManager ins;
+    public static LevelManager GetInstance
+    {
+        get
+        {
+            ins = ins == null ? FindObjectOfType<LevelManager>() : new GameObject("LevelManager").AddComponent<LevelManager>();
+            return ins;
+        }
+    }
+    void Awake()
+    {
+        player = player ?? FindObjectOfType<PlayerController>();
+        if(player == null)
+        player.gameObject.SetActive(false);
+        waveManager = new WaveManager(this, waveScreen, debugScreen);
+        ObjectPooler.PoolGameObject(wallPrefab, 300);
+        playArea = new Tile[FieldAreaX / TileSize, FieldAreaZ / TileSize];
+    }
 
     Vector3 GetPositionCenteredInArr(int x, int z)
     {
@@ -89,11 +104,7 @@ public class LevelManager : MonoBehaviour {
     // Start is called before the first frame update
     void Start()
     {
-        player = player ?? FindObjectOfType<PlayerController>();
-        player.gameObject.SetActive(false);
-        waveManager = new WaveManager(this, waveScreen, debugScreen);
-        ObjectPooler.PoolGameObject(wallPrefab, 300);
-        playArea = new Tile[FieldAreaX / TileSize, FieldAreaZ / TileSize];
+
 
 
 

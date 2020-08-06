@@ -34,7 +34,7 @@ public class WaveManager {
 
     private void DisplayAllLivingEnemies()
     {
-        debugScreen.text = $"Current Enemies Alive: {allSpawnedEnemies.Count(a => a.activeSelf)}";
+        //debugScreen.text = $"Current Enemies Alive: {allSpawnedEnemies.Count(a => a.activeSelf)}";
     }
 
     public MonoBehaviour Behaivour { get; }

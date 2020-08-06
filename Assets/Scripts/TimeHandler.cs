@@ -34,7 +34,7 @@ public class TimeHandler {
     public TimeHandler()
     {
         replayList = new GameObject("Recorded Actions").transform;
-        replayList.SetParent(LevelManager.GetInstance.transform);
+        
     }
 
 
