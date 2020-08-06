@@ -26,6 +26,8 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
     public float turningSpeed { private get; set; } = 120f;
     public float accelerationRate { private get; set; } = 8f;
 
+    public NavMeshAgent agent { get; private set; }
+
     public void TakeDamage(BulletBehaivour bullet)
     {
         onDamageEvent?.Invoke(this, bullet);
@@ -52,7 +54,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
         SetNavMeshTarget();
 
     }
-    NavMeshAgent agent;
+
     PlayerController player;
     public void SetNavMeshTarget()
     {
