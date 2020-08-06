@@ -5,7 +5,7 @@ using System;
 public class EntityBehaviour : MonoBehaviour, IDamageable {
     internal Entity parentClass;
     internal Vector3 spawnPos;
-    internal Action<EntityBehaviour> onDamageEvent;
+    internal Action<EntityBehaviour, BulletBehaivour> onDamageEvent;
     internal Action<EntityBehaviour> onStartEvent;
     internal Action<EntityBehaviour> onUpdateEvent;
 
@@ -28,8 +28,8 @@ public class EntityBehaviour : MonoBehaviour, IDamageable {
         onStartEvent += entity.StartEvent;
     }
 
-    public void TakeDamage()
+    public void TakeDamage(BulletBehaivour bullet)
     {
-        onDamageEvent?.Invoke(this);
+        onDamageEvent?.Invoke(this, bullet);
     }
 }

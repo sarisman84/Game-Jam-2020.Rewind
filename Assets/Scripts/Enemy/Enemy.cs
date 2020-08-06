@@ -9,14 +9,9 @@ using Object = UnityEngine;
 using Westwind.Scripting;
 
 
-public class Enemy {
-    public Vector2Int spawnIndex;
-
-    string modelPath;
-    public Enemy(string modelPath)
+public class Enemy : Entity {
+    public Enemy(string modelPath) : base(modelPath)
     {
-        this.modelPath = modelPath;
-
     }
 
     public EnemyBehaviour SpawnEnemy(Vector3 spawnPos, Vector2Int index)

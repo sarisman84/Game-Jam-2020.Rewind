@@ -20,7 +20,7 @@ public static class ObjectPooler {
     /// <param name="amount">The amount of objects created that is going to be added into the pool.</param>
     public static void PoolGameObject<T>(T prefab, int amount) where T : MonoBehaviour
     {
-
+        if (prefab == null) return;
         List<GameObject> poolofObjects = new List<GameObject>();
 
         Transform parent = new GameObject($"{prefab.gameObject.name}'s list").transform;

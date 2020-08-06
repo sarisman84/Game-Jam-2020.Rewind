@@ -10,48 +10,46 @@ public class BulletBehaivour : MonoBehaviour {
 
     public float bulletVelocity { get; set; }
 
-
+    public Rigidbody physics => rigidbody;
     Vector3 collisionPosition => transform.position + transform.forward.normalized * (transform.localScale.z + 0.25f);
     Vector3 originalSize = Vector3.zero;
+
+    public Collision ContactPoint { private set; get; }
+
+    public event Action<BulletBehaivour> onCollisionEvent;
 
     void FixedUpdate()
     {
         if (rigidbody != null)
         {
-            CollisionCheck();
+
             rigidbody.velocity = transform.forward * bulletVelocity;
         }
-      
+
     }
 
-    private void CollisionCheck(float distanceCheck = 0.30f)
+
+
+    private void OnCollisionEnter(Collision collision)
     {
-        //If we have collided with something, affect the bullet
-        Collider[] foundColliders = Physics.OverlapSphere(collisionPosition, distanceCheck);
-        if (foundColliders == null || foundColliders.Length == 0) return;
-        Collider collidedObject = Array.Find(foundColliders, c => c.gameObject != gameObject);
-
-        if (collidedObject != null && collidedObject.gameObject != gameObject)
+        if (collision == null || rigidbody == null) return;
+        ContactPoint = collision;
+        if (onCollisionEvent == null)
         {
-            //Check if the collider we hit contains a BounceTile component. If it has, affect the bullet's velocity so that it bounces of the wall.
-            //collidedObject.gameObject.GetComponent<BounceTile>()
-
-
-
-
             rigidbody.velocity = Vector3.zero;
             gameObject.SetActive(false);
-
-            //Check if the collider we hit contains a EnemyBehaivour component. If it has, affect the EnemyBehaivour's logic.
-            IDamageable element = collidedObject.gameObject.GetComponent<IDamageable>();
-            if (element != null)
-            {
-                element.TakeDamage();
-            }
-
-
-
         }
+        else
+        {
+            onCollisionEvent.Invoke(this);
+        }
+
+        IDamageable element = collision.gameObject.GetComponent<IDamageable>();
+        if (element != null)
+        {
+            element.TakeDamage(this);
+        }
+
     }
 
     private void OnDrawGizmos()

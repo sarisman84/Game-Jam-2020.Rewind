@@ -213,7 +213,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
             Gizmos.DrawSphere(lookAtPos, 1);
     }
 
-    public void TakeDamage()
+    public void TakeDamage(BulletBehaivour bullet)
     {
         if (!isResetting && !godMode)
             manager.LooseOneLife();

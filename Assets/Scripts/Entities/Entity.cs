@@ -8,16 +8,19 @@ using UnityEngine;
 public class Entity {
     public Vector2Int spawnIndex;
 
-    string modelPath;
+    protected string modelPath;
     public Entity(string modelPath)
     {
         this.modelPath = modelPath;
 
     }
 
-    public EntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index)
+ 
+
+
+    public virtual EntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index)
     {
-        EntityBehaviour entity = ObjectPooler.GetPooledObject(Resources.Load<EntityBehaviour>($"Enemies/{modelPath}"));
+        EntityBehaviour entity = ObjectPooler.GetPooledObject(Resources.Load<EntityBehaviour>($"Entity/{modelPath}"));
 
         entity.parentClass = this;
         entity.AssignEvents(this);
@@ -42,7 +45,7 @@ public class Entity {
 
     }
 
-    public virtual void DamageEvent(EntityBehaviour obj)
+    public virtual void DamageEvent(EntityBehaviour obj, BulletBehaivour incomingBullet)
     {
 
 

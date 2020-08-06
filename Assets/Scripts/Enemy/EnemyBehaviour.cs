@@ -26,7 +26,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
     public float turningSpeed { private get; set; } = 120f;
     public float accelerationRate { private get; set; } = 8f;
 
-    public void TakeDamage()
+    public void TakeDamage(BulletBehaivour bullet)
     {
         onDamageEvent?.Invoke(this);
         EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt(onDeathParticle, transform.position);
@@ -73,7 +73,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
             agent.isStopped = true;
             if (localTimer == attackDelay)
             {
-                player.TakeDamage();
+                player.TakeDamage(null);
                 localTimer = 0;
             }
 

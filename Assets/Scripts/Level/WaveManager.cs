@@ -94,6 +94,7 @@ public class WaveManager {
             for (int i = 0; i < amm; i++)
             {
                 yield return CreateEnemyAtRandomPosition(e, 0.05f);
+                yield return CreateEntityAtRandomPosition(0.05f);
                 DisplayAllLivingEnemies();
 
             }
@@ -105,6 +106,15 @@ public class WaveManager {
 
 
 
+    }
+
+    private IEnumerator CreateEntityAtRandomPosition(float v)
+    {
+        Vector2Int index = LevelManager.GetInstance.GetGetRandomGridPosition<Vector2Int>().ToVector2Int();
+        Vector3 spawnPos = LevelManager.GetInstance.PlayArea[index.x, index.y].GetWorldPosition();
+        EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("EnemySpawn", spawnPos);
+        yield return new WaitForSeconds(v);
+        allCustomTiles.Add(new BouncyWall().SpawnEntity(spawnPos, index));
     }
 
     IEnumerator CreateEnemyAtRandomPosition(Enemy e, float delay)
