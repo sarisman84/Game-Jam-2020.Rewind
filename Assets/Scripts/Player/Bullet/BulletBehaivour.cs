@@ -58,7 +58,10 @@ public class BulletBehaivour : MonoBehaviour {
         Gizmos.DrawWireSphere(collisionPosition, 0.30f);
     }
 
-
+    private void OnDisable()
+    {
+        
+    }
 
 
     public void Setup(Vector3 position, Quaternion rotation, float bulletVelocity = 25f)

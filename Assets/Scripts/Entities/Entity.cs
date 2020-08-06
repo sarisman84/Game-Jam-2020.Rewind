@@ -15,12 +15,12 @@ public class Entity {
 
     }
 
- 
+
 
 
     public virtual EntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index)
     {
-        EntityBehaviour entity = ObjectPooler.GetPooledObject(Resources.Load<EntityBehaviour>($"Entity/{modelPath}"));
+        EntityBehaviour entity = ObjectPooler.GetPooledObject<EntityBehaviour>(Resources.Load<GameObject>($"Entity/{modelPath}"));
 
         entity.parentClass = this;
         entity.AssignEvents(this);
