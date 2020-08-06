@@ -78,5 +78,13 @@ public static class Extension {
         Component[] components = obj.GetComponents<Component>();
         return Array.Find(components, p => p is T t) != null && components.Length == 2;
     }
+
+    public static float CountTime(this float value, float timeLimit)
+    {
+        value += Time.deltaTime;
+        value = Mathf.Clamp(value, 0, timeLimit);
+
+        return value;
+    }
 }
 

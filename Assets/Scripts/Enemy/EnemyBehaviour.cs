@@ -26,7 +26,10 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
     public float turningSpeed { private get; set; } = 120f;
     public float accelerationRate { private get; set; } = 8f;
 
+    public float attackRange { private get; set; } = 3f;
+
     public NavMeshAgent agent { get; private set; }
+    public PlayerController foundPlayer { get; private set; } 
 
     public void TakeDamage(BulletBehaivour bullet)
     {
@@ -37,37 +40,36 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
 
     private void Start()
     {
+        agent = agent ?? GetComponent<NavMeshAgent>();
+        foundPlayer = foundPlayer ?? FindObjectOfType<PlayerController>();
+
+
         onStartEvent?.Invoke(this);
+        agent.speed = enemySpeed;
+        agent.angularSpeed = turningSpeed;
     }
     float attackDelay = 1.5f, localTimer;
     private void Update()
     {
         localTimer += Time.deltaTime;
         localTimer = Mathf.Clamp(localTimer, 0, attackDelay);
-
-        if (overrideUpdate)
-        {
-            onUpdateEvent?.Invoke(this);
-            return;
-        }
         onUpdateEvent?.Invoke(this);
-        SetNavMeshTarget();
+        if (!overrideUpdate)
+            SetNavMeshTarget();
+
+
 
     }
 
-    PlayerController player;
+  
     public void SetNavMeshTarget()
     {
-        agent = agent ?? GetComponent<NavMeshAgent>();
-        player = player ?? FindObjectOfType<PlayerController>();
 
-        agent.speed = enemySpeed;
-        agent.angularSpeed = turningSpeed;
 
-        if ((player.transform.position - transform.position).magnitude > 3f)
+        if ((foundPlayer.transform.position - transform.position).magnitude > attackRange)
         {
             agent.isStopped = false;
-            agent.SetDestination(player.transform.position);
+            agent.SetDestination(foundPlayer.transform.position);
         }
 
         else
@@ -75,7 +77,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
             agent.isStopped = true;
             if (localTimer == attackDelay)
             {
-                player.TakeDamage(null);
+                foundPlayer.TakeDamage(null);
                 localTimer = 0;
             }
 
