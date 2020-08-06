@@ -1,9 +1,10 @@
 ﻿using System;
-using Assets.Enemy;
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using TMPro;
 
 public class LevelManager : MonoBehaviour {
 
@@ -27,7 +28,11 @@ public class LevelManager : MonoBehaviour {
     int FieldAreaZ = 20;
 
 
+    public TMP_Text debugScreen;
+    public TMP_Text waveScreen;
+
     public WaveManager waveManager;
+    
 
 
     //new Vector2Int(Random.Range(0, playArea.GetLength(0) - 1), Random.Range(0, playArea.GetLength(1) - 1))
@@ -81,7 +86,7 @@ public class LevelManager : MonoBehaviour {
     // Start is called before the first frame update
     void Start()
     {
-        waveManager = new WaveManager(this);
+        waveManager = new WaveManager(this, waveScreen, debugScreen);
         ObjectPooler.PoolGameObject(wallPrefab, 300);
         playArea = new Tile[FieldAreaX / TileSize, FieldAreaZ / TileSize];
 
@@ -89,7 +94,7 @@ public class LevelManager : MonoBehaviour {
 
 
 
-        StartCoroutine(waveManager.DeployFirstWave(3, 0, new Enemy("Enemy"), new Enemy("Enemy"), new Enemy("Enemy")));
+        StartCoroutine(waveManager.DeployFirstWave(1, 0.05f, new Enemy("Enemy"), new Enemy("Enemy"), new Enemy("Enemy")));
     }
 
     private void CreateLevel()

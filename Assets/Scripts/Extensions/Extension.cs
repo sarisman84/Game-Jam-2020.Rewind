@@ -46,5 +46,37 @@ public static class Extension {
         bounds.size = new Vector3(radius, radius, radius);
         return bounds.Contains(pos);
     }
+
+
+
+    public static void PlayAudioClip(this List<AudioFile> list, string name, params Action<AudioFile>[] customEffects)
+    {
+        AudioFile file = list.Find(f => f.name.Contains(name));
+        if (file == null) return;
+        foreach (var item in customEffects)
+        {
+            item?.Invoke(file);
+        }
+        file.Play();
+    }
+
+
+    public static void PlayParticleEffectAt(this List<ParticleEffect> list, string name, Vector3 position, params Action<ParticleEffect>[] customEffects)
+    {
+        ParticleEffect effect = list.Find(f => f.particleName.Contains(name));
+        if (effect == null) return;
+        foreach (var item in customEffects)
+        {
+            item?.Invoke(effect);
+        }
+        effect.PlayEffect(position);
+    }
+
+
+    public static bool ContainsOnlyComponent<T>(this GameObject obj)
+    {
+        Component[] components = obj.GetComponents<Component>();
+        return Array.Find(components, p => p is T t) != null && components.Length == 2;
+    }
 }
 

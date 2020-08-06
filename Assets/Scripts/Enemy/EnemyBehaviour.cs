@@ -1,4 +1,4 @@
-﻿using Assets.Enemy;
+﻿
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,20 +14,22 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
     public event Action<EnemyBehaviour> onUpdateEvent;
 
     public Enemy parentClass;
-    
+
+
 
     public Vector3 spawnPos { private get; set; }
 
+    public string onDeathParticle { private get; set; } = "EnemyDeath";
     public bool activeSelf => gameObject.activeSelf;
     public bool overrideUpdate { private get; set; }
     public float enemySpeed { private get; set; } = 3.5f;
     public float turningSpeed { private get; set; } = 120f;
-
     public float accelerationRate { private get; set; } = 8f;
 
     public void TakeDamage()
     {
         onDamageEvent?.Invoke(this);
+        EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt(onDeathParticle, transform.position);
     }
 
 
@@ -40,7 +42,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
     {
         localTimer += Time.deltaTime;
         localTimer = Mathf.Clamp(localTimer, 0, attackDelay);
-        
+
         if (overrideUpdate)
         {
             onUpdateEvent?.Invoke(this);
@@ -74,7 +76,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
                 player.TakeDamage();
                 localTimer = 0;
             }
-           
+
         }
     }
 
@@ -88,5 +90,6 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
     public void ResetPositionToSpawn()
     {
         transform.position = spawnPos;
+        EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("EnemySpawn", spawnPos);
     }
 }

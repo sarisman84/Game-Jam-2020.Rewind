@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using Cinemachine;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody))]
 
@@ -18,6 +19,8 @@ public class PlayerController : MonoBehaviour, IDamageable {
     float localTimer;
     [SerializeField]
     float movementRate;
+
+    public bool godMode = false;
 
     [SerializeField]
     CinemachineVirtualCamera playerCamera;
@@ -47,15 +50,17 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     public void ResetPositionToSpawn()
     {
-        _PositionX = (LevelManager.GetInstance.PlayArea.GetLength(0) - 1) / 2;
-        _PositionZ = (LevelManager.GetInstance.PlayArea.GetLength(1) - 1) / 2;
 
+        TimeHandler.GetInstance.isRewinding = false;
         //Used to center the player on the grid at the start of the game.
         StartCoroutine(MoveWithinGrid());
     }
 
     void Start()
     {
+        _PositionX = (LevelManager.GetInstance.PlayArea.GetLength(0) - 1) / 2;
+        _PositionZ = (LevelManager.GetInstance.PlayArea.GetLength(1) - 1) / 2;
+
         ResetPositionToSpawn();
     }
     // Update is called once per frame
@@ -69,7 +74,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
             AimIndicator();
             ShootBullet();
         }
-       
+
 
 
     }
@@ -96,8 +101,9 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     private void ShootBullet()
     {
-        if (InputManager.GetInstance.IsShooting)
+        if (InputManager.GetInstance.IsShooting && !TimeHandler.GetInstance.isRewinding)
         {
+
             InitializeBullet(aimGameObject.transform.GetChild(1).position, aimGameObject.transform.rotation);
             TimeHandler.GetInstance.RecordAction(this);
             InputManager.GetInstance.IsShooting = false;
@@ -107,6 +113,22 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     public void InitializeBullet(Vector3 firePosition, Quaternion fireRotation)
     {
+        EffectsManager.GetInstance.CurrentAudioFiles.PlayAudioClip("PlayerShoot", c =>
+        {
+            float result = Random.Range(1f, 2f);
+            c.Player.time = 0;
+            if (TimeHandler.GetInstance.isRewinding)
+            {
+                result = Random.Range(-1f, -0.5f);
+                c.Player.time = c.Player.clip.length / 4f;
+            }
+            c.Player.pitch = result;
+        });
+
+        EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("BulletEffect", firePosition, c =>
+        {
+            c.prefab.transform.rotation = fireRotation;
+        });
         BulletBehaivour bullet = ObjectPooler.GetPooledObject<BulletBehaivour>();
         bullet.gameObject.SetActive(true);
         bullet.Setup(firePosition, fireRotation);
@@ -134,7 +156,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     /// 
     private IEnumerator MoveWithinGrid()
     {
-
+        controller.velocity = Vector3.zero;
         Vector3 newPos = LevelManager.GetInstance.PlayArea[PositionX, PositionZ].GetWorldPosition(gameObject);
         while (!newPos.IsWithinRadiusOf(transform.position, 3f))
         {
@@ -142,8 +164,12 @@ public class PlayerController : MonoBehaviour, IDamageable {
             transform.position = Vector3.Lerp(transform.position, newPos, 4f * Time.deltaTime);
             isResetting = true;
         }
-        isResetting = false;
+        transform.position = newPos;
+        if (isResetting)
+            isResetting = false;
         yield return null;
+        EffectsManager.GetInstance.CurrentBackgroundMusic.time = 0;
+        EffectsManager.GetInstance.CurrentBackgroundMusic.pitch = 1;
 
     }
 
@@ -189,7 +215,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     public void TakeDamage()
     {
-        if (!isResetting)
+        if (!isResetting && !godMode)
             manager.LooseOneLife();
     }
 }

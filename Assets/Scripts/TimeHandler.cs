@@ -1,4 +1,4 @@
-﻿using Assets.Enemy;
+﻿
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,6 +23,8 @@ public class TimeHandler {
     }
 
 
+    public bool isRewinding { get; set; }
+
     Transform replayList;
 
     public List<Enemy> currentEnemies { private get; set; }
@@ -38,10 +40,10 @@ public class TimeHandler {
 
     public void RecordAction(PlayerController player)
     {
-        
+
         RecordedAction action = new RecordedAction(player.transform.position, player.aimGameObject.transform.GetChild(1).position, player.aimGameObject.transform.rotation, Time.time);
-        
-       
+
+
 
 
 
@@ -91,6 +93,7 @@ public class TimeHandler {
         yield return PlayRecordedActionsOfListElement(allRecordedActions, player, 0.5f);
         player.StartCoroutine(LevelManager.GetInstance.waveManager.DeployNextWave());
         player.ResetPositionToSpawn();
+
     }
 
     private bool AreRewindsDone()
@@ -104,13 +107,14 @@ public class TimeHandler {
 
         LinkedListNode<RecordedAction> node = queue.First;
         float reductionAmm = 0.05f;
+        EffectsManager.GetInstance.CurrentBackgroundMusic.pitch = -1;
 
         while (node != null)
         {
 
 
 
-
+            isRewinding = true;
             yield return new WaitForSeconds(initialDelay);
 
             RecordedAction action = node.Value;
@@ -119,15 +123,18 @@ public class TimeHandler {
 
             node = node.Next;
             initialDelay -= reductionAmm;
-            initialDelay = Mathf.Clamp(initialDelay, 0, float.MaxValue);
+            initialDelay = Mathf.Clamp(initialDelay, 0.15f, float.MaxValue);
             reductionAmm -= 0.005f;
             reductionAmm = Mathf.Clamp(reductionAmm, 0.01f, float.MaxValue);
+
+
         }
 
         areRewindsDone[this.index] = true;
         this.index++;
         this.index = Mathf.Clamp(index, 0, areRewindsDone.Length - 1);
         yield return null;
+
 
     }
 

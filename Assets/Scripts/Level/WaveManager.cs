@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Assets.Enemy;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,25 +13,36 @@ public class WaveManager {
     public List<EnemyBehaviour> allSpawnedEnemies = new List<EnemyBehaviour>();
     List<Enemy> allEnemyTypes = new List<Enemy>();
 
+    public List<EntityBehaviour> allCustomTiles = new List<EntityBehaviour>();
 
-    TextMeshProUGUI waveCounter;
+
+    TMP_Text waveCounter;
+
+    TMP_Text debugScreen;
 
     public bool areAllEnemiesDead
     {
         get
         {
             int inactiveCount = allSpawnedEnemies.Count(e => !e.activeSelf);
-            
-            return inactiveCount == allSpawnedEnemies.Count - 1;
+            DisplayAllLivingEnemies();
+            return inactiveCount == allSpawnedEnemies.Count;
         }
+    }
+
+    private void DisplayAllLivingEnemies()
+    {
+        debugScreen.text = $"Current Enemies Alive: {allSpawnedEnemies.Count(a => a.activeSelf)}";
     }
 
     public MonoBehaviour Behaivour { get; }
 
-    public WaveManager(MonoBehaviour behaivour)
+    public WaveManager(MonoBehaviour behaivour, TMP_Text screenText, TMP_Text debugText)
     {
         Behaivour = behaivour;
         waveCounter = GameObject.FindObjectOfType<TextMeshProUGUI>();
+        debugScreen = debugText;
+        waveCounter = screenText;
     }
 
 
@@ -43,10 +54,9 @@ public class WaveManager {
         {
             for (int i = 0; i < amountOfEnemies; i++)
             {
-                Vector2Int index = LevelManager.GetInstance.GetGetRandomGridPosition<Vector2Int>().ToVector2Int();
-                Vector3 spawnPos = LevelManager.GetInstance.PlayArea[index.x, index.y].GetWorldPosition();
-                allSpawnedEnemies.Add(item.SpawnEnemy(spawnPos, index));
-                yield return new WaitForSeconds(spawnDelay);
+                yield return CreateEnemyAtRandomPosition(item, spawnDelay);
+
+                DisplayAllLivingEnemies();
             }
 
             allEnemyTypes.Add(item);
@@ -66,10 +76,12 @@ public class WaveManager {
 
         IEnumerator p(EnemyBehaviour e)
         {
+
             e.ResetPositionToSpawn();
             e.AssignEvents(e.parentClass);
             e.gameObject.SetActive(true);
             yield return new WaitForSeconds(0.05f);
+            DisplayAllLivingEnemies();
 
         }
         yield return allSpawnedEnemies.ExecuteAction(p);
@@ -78,19 +90,31 @@ public class WaveManager {
 
         IEnumerator x(Enemy e)
         {
-            int amm = Random.Range(2, 4);
+            int amm = Random.Range(0, 2);
             for (int i = 0; i < amm; i++)
             {
-                Vector2Int index = LevelManager.GetInstance.GetGetRandomGridPosition<Vector2Int>().ToVector2Int();
-                Vector3 spawnPos = LevelManager.GetInstance.PlayArea[index.x, index.y].GetWorldPosition();
-                allSpawnedEnemies.Add(e.SpawnEnemy(spawnPos, index));
-                yield return new WaitForSeconds(0.05f);
+                yield return CreateEnemyAtRandomPosition(e, 0.05f);
+                DisplayAllLivingEnemies();
+
             }
         }
         yield return allEnemyTypes.ExecuteAction(x);
 
         currentWave++;
         waveCounter.text = $"Wave:{currentWave}";
+
+
+
+    }
+
+    IEnumerator CreateEnemyAtRandomPosition(Enemy e, float delay)
+    {
+        Vector2Int index = LevelManager.GetInstance.GetGetRandomGridPosition<Vector2Int>().ToVector2Int();
+        Vector3 spawnPos = LevelManager.GetInstance.PlayArea[index.x, index.y].GetWorldPosition();
+        EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("EnemySpawn", spawnPos);
+        yield return new WaitForSeconds(delay);
+        allSpawnedEnemies.Add(e.SpawnEnemy(spawnPos, index));
+
     }
 
 

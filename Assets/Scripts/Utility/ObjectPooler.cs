@@ -8,8 +8,7 @@ using UnityEngine;
 using Component = UnityEngine.Component;
 using Object = UnityEngine.Object;
 
-public static class ObjectPooler
-{
+public static class ObjectPooler {
 
     static Dictionary<int, List<GameObject>> dictionaryOfPooledObjects = new Dictionary<int, List<GameObject>>();
 
@@ -88,11 +87,16 @@ public static class ObjectPooler
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns>An inactive gameObject. If all objects in a pool are used, it creates a new active gameObject and adds it into the pool.</returns>
-    public static T GetPooledObject<T>()
+    public static T GetPooledObject<T>(int prefabID = 0)
     {
         foreach (KeyValuePair<int, List<GameObject>> item in dictionaryOfPooledObjects)
         {
-            if (item.Value[0].GetComponent<T>() != null)
+            bool isValid = true;
+            if (prefabID != 0)
+                isValid = item.Key == prefabID;
+
+
+            if (item.Value[0].GetComponent<T>() != null && isValid)
             {
                 foreach (GameObject element in item.Value)
                 {
@@ -111,7 +115,7 @@ public static class ObjectPooler
     }
 
 
-    public static T GetPooledObject<T>(T prefab) where T:MonoBehaviour
+    public static T GetPooledObject<T>(T prefab) where T : MonoBehaviour
     {
         T result = GetPooledObject<T>();
         if (result != null)
@@ -121,6 +125,19 @@ public static class ObjectPooler
         PoolGameObject(prefab, 300);
         return GetPooledObject<T>();
     }
+
+
+    public static T GetPooledObject<T>(GameObject prefab)
+    {
+        T result = GetPooledObject<T>(prefab.GetInstanceID());
+        if (result != null)
+        {
+            return result;
+        }
+        PoolGameObject(prefab, 300);
+        return GetPooledObject<T>();
+    }
+
 
     /// <summary>
     ///  Gets the first inactive gameObject from a pool of gameObjects by searching using a prefab instance ID.

@@ -1,12 +1,11 @@
-﻿using Assets.Enemy;
+﻿
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class BulletBehaivour : MonoBehaviour
-{
+public class BulletBehaivour : MonoBehaviour {
     new Rigidbody rigidbody;
 
     public float bulletVelocity { get; set; }
@@ -17,8 +16,12 @@ public class BulletBehaivour : MonoBehaviour
 
     void FixedUpdate()
     {
-        CollisionCheck();
-        rigidbody.velocity = transform.forward * bulletVelocity;
+        if (rigidbody != null)
+        {
+            CollisionCheck();
+            rigidbody.velocity = transform.forward * bulletVelocity;
+        }
+      
     }
 
     private void CollisionCheck(float distanceCheck = 0.30f)
@@ -57,7 +60,7 @@ public class BulletBehaivour : MonoBehaviour
         Gizmos.DrawWireSphere(collisionPosition, 0.30f);
     }
 
-    
+
 
 
     public void Setup(Vector3 position, Quaternion rotation, float bulletVelocity = 25f)
