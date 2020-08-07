@@ -102,7 +102,7 @@ public class BulletBehaivour : MonoBehaviour {
             c.Player.pitch = result;
         });
 
-        EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("BulletEffect", firePosition, c =>
+        EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("BulletEffect", firePosition, false, c =>
         {
             c.prefab.transform.rotation = fireRotation;
         });

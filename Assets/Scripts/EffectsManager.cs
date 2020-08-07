@@ -98,19 +98,16 @@ public class ParticleEffect {
 
     public void PlayEffect(Vector3 position, bool followPosition = false)
     {
-        if (prefab.isEmitting)
+
+        if (prefab.isEmitting && !followPosition)
         {
-            if (followPosition)
-            {
-                prefab.transform.position = position;
-            }
-            else
-            {
-                ParticleSystem particleSystem = ObjectPooler.GetPooledObject<ParticleSystem>(prefab.gameObject);
-                particleSystem.gameObject.SetActive(true);
-                particleSystem.transform.position = position;
-                particleSystem.Play();
-            }
+
+
+            ParticleSystem particleSystem = ObjectPooler.GetPooledObject<ParticleSystem>(prefab.gameObject);
+            particleSystem.gameObject.SetActive(true);
+            particleSystem.transform.position = position;
+            particleSystem.Play();
+
 
 
 

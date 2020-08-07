@@ -549,8 +549,10 @@ MonoBehaviour:
     prefab: {fileID: 6778264297360676367, guid: cc363e9af1743924ab5e80c8e7bd3c21, type: 3}
   - particleName: PlayerHit
     prefab: {fileID: 3229034897429835270, guid: cc6e58ed0c80b4a4689a0e2b768b1d1c, type: 3}
-  - particleName: BulletSpawn
-    prefab: {fileID: 4263103467173667032, guid: bebd1d48251119841a9cb08287aa556b, type: 3}
+  - particleName: Immunity
+    prefab: {fileID: 609014200263685631, guid: cbe7ea47a5b7b3042b746be9e09d5791, type: 3}
+  - particleName: PlayerDeath
+    prefab: {fileID: 165888091692063941, guid: 9f86b1984f8a7084ca4e71b1c00ac442, type: 3}
   - particleName: PlayerDeath
     prefab: {fileID: 165888091692063941, guid: 9f86b1984f8a7084ca4e71b1c00ac442, type: 3}
   - particleName: PlayerDeath
@@ -689,6 +691,54 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1606052245710496642, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
   m_PrefabInstance: {fileID: 1702668598}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1452718531
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1452718533}
+  - component: {fileID: 1452718532}
+  m_Layer: 9
+  m_Name: Main Post Effects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1452718532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452718531}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 0645fe121246570489d09edf87714cf1, type: 2}
+--- !u!4 &1452718533
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452718531}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1481676701
 GameObject:
   m_ObjectHideFlags: 0
@@ -702,7 +752,7 @@ GameObject:
   - component: {fileID: 1481676704}
   - component: {fileID: 1481676705}
   m_Layer: 9
-  m_Name: GameObject
+  m_Name: Post Effects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -829,29 +879,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 119805146, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 119805146, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 119805146, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 687.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 119805146, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -61.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 119805146, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 499.85425
-      objectReference: {fileID: 0}
-    - target: {fileID: 119805146, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 908.8686
+    - target: {fileID: 317798839745849422, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
+      propertyPath: m_text
+      value: 'Open Source Music and Sound effects: zagi2 and jeckkech at Freesound.org
+
+
+
+        Lead
+        Designer: Heroic Emiya
+
+        Programmer: Heroic Emiya, Maam27
+
+        UI
+        Artist: Heroic Emiya
+
+'
       objectReference: {fileID: 0}
     - target: {fileID: 1606052245710496642, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
       propertyPath: m_Name
@@ -949,50 +991,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1352943497}
-    - target: {fileID: 2579510196974168629, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -128
-      objectReference: {fileID: 0}
-    - target: {fileID: 2579510196974168629, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 131.7
-      objectReference: {fileID: 0}
     - target: {fileID: 3316632801479469523, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1131486142}
-    - target: {fileID: 5753655879946349992, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 252
-      objectReference: {fileID: 0}
-    - target: {fileID: 7412200556770543557, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -110.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7412200556770543557, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -0.0000009536743
-      objectReference: {fileID: 0}
-    - target: {fileID: 8153404503249674405, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 128
-      objectReference: {fileID: 0}
-    - target: {fileID: 8153404503249674405, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 131.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 8612622122364798443, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 8612622122364798443, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 8612622122364798443, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 472
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3567edfd135a2f4d83e1b116ebfdc9e, type: 3}
 --- !u!1 &1712845385

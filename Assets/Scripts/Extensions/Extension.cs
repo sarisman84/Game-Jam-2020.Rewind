@@ -61,7 +61,7 @@ public static class Extension {
     }
 
 
-    public static void PlayParticleEffectAt(this List<ParticleEffect> list, string name, Vector3 position, params Action<ParticleEffect>[] customEffects)
+    public static void PlayParticleEffectAt(this List<ParticleEffect> list, string name, Vector3 position, bool follow = false, params Action<ParticleEffect>[] customEffects)
     {
         ParticleEffect effect = list.Find(f => f.particleName.Contains(name));
         if (effect == null) return;
@@ -69,7 +69,7 @@ public static class Extension {
         {
             item?.Invoke(effect);
         }
-        effect.PlayEffect(position);
+        effect.PlayEffect(position, follow);
     }
 
 
