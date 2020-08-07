@@ -165,6 +165,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
             EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("BulletDeath", b.transform.position);
         }
         );
+        PostProcessingManager.GetInstance.DisableTimeRewindPP();
 
     }
 

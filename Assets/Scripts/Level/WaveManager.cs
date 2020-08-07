@@ -112,7 +112,7 @@ public class WaveManager {
 
         IEnumerator AddExtraEnemies(IEntity e)
         {
-            int amm = Random.Range(1, 2);
+            int amm = Random.Range(1, 3);
             for (int i = 0; i < amm; i++)
             {
                 yield return CreateEnemyAtRandomPosition(e, 0.05f, levelManagerRef);

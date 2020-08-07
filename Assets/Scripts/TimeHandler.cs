@@ -34,7 +34,7 @@ public class TimeHandler {
     public TimeHandler()
     {
         replayList = new GameObject("Recorded Actions").transform;
-        
+
     }
 
 
@@ -112,6 +112,7 @@ public class TimeHandler {
 
         LinkedListNode<RecordedAction> node = queue.First;
         float reductionAmm = 0.05f;
+        PostProcessingManager.GetInstance.EnableTimeRewindPP();
         EffectsManager.GetInstance.CurrentBackgroundMusic.pitch = -1;
 
         while (node != null)

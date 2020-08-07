@@ -70,6 +70,7 @@ public class PlayerManager {
     private IEnumerator KillPlayer()
     {
         EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("PlayerDeath", behaivour.transform.position);
+        PostProcessingManager.GetInstance.EnableTimeRewindPP();
         yield return new WaitForSeconds(0.5f);
         behaivour.gameObject.SetActive(false);
         MenuScript.GetInstance.GameOver();
@@ -84,5 +85,6 @@ public class PlayerManager {
 
         amountOfLives = maxAmountOfLives;
         VisualiseHealth();
+        PostProcessingManager.GetInstance.DisableTimeRewindPP();
     }
 }

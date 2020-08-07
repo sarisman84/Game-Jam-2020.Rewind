@@ -28,9 +28,9 @@ public class EffectsManager : MonoBehaviour {
     private void Awake()
     {
         CurrentBackgroundMusic = GetComponent<AudioSource>();
-       listOfAudioFiles.ExecuteAction(a => a.CreateAudioSource(gameObject));
+        listOfAudioFiles.ExecuteAction(a => a.CreateAudioSource(gameObject));
         listOfParticleEffects.ExecuteAction(b => b.CreateParticleSystem(gameObject));
-       
+
 
     }
 
@@ -96,15 +96,24 @@ public class ParticleEffect {
     }
 
 
-    public void PlayEffect(Vector3 position)
+    public void PlayEffect(Vector3 position, bool followPosition = false)
     {
         if (prefab.isEmitting)
         {
+            if (followPosition)
+            {
+                prefab.transform.position = position;
+            }
+            else
+            {
+                ParticleSystem particleSystem = ObjectPooler.GetPooledObject<ParticleSystem>(prefab.gameObject);
+                particleSystem.gameObject.SetActive(true);
+                particleSystem.transform.position = position;
+                particleSystem.Play();
+            }
 
-            ParticleSystem particleSystem = ObjectPooler.GetPooledObject<ParticleSystem>(prefab.gameObject);
-            particleSystem.gameObject.SetActive(true);
-            particleSystem.transform.position = position;
-            particleSystem.Play();
+
+
 
 
             return;

@@ -15,7 +15,7 @@ public class LevelManager : MonoBehaviour {
 
 
     public GameObject wallPrefab;
-    public Tile[,] playArea = new Tile[71,51];
+    public Tile[,] playArea = new Tile[71, 51];
 
     public Tile[,] PlayArea => playArea;
     //private Tile[,] PlayArea;
@@ -88,15 +88,17 @@ public class LevelManager : MonoBehaviour {
     public void CreateLevel()
     {
         //Transform floorParent = CreateParent("Floor");
-        StartCoroutine(_CreateLevel());        
+        StartCoroutine(_CreateLevel());
     }
 
     private IEnumerator _CreateLevel()
     {
+        EffectsManager.GetInstance.CurrentBackgroundMusic.Play();
         Transform enemyParent = CreateParent("Enemies");
         if (waveManager.allSpawnedEnemies.Count != 0)
         {
             waveManager.allSpawnedEnemies.ExecuteAction(e => e.gameObject.SetActive(false)).ToList().Clear();
+            waveManager.summonedEnemies.ExecuteAction(e => e.gameObject.SetActive(false)).ToList().Clear();
             TimeHandler.GetInstance.ClearRecordings();
 
         }
