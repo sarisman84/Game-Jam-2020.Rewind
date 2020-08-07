@@ -49,7 +49,7 @@ public class LevelManager : MonoBehaviour {
             Vector2Int playerPos = new Vector2Int(player.PositionX, player.PositionZ);
             float distanceToPlayer = (playerPos - vector).magnitude;
 
-            if (playArea[vector.x, vector.y].ExistsEntity() || distanceToPlayer <= 4f)
+            if (playArea[vector.x, vector.y].ExistsEntity() || distanceToPlayer <= 8f)
                 vector = Vector2Int.zero;
             attemps++;
             if (attemps == 30)
