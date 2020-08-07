@@ -9,7 +9,7 @@ public class Turret : Enemy
 
     public Turret() : base("Turret")
     {
-        timeSinceLastShot = new System.Random().Next((int)fireInterval);
+        timeSinceLastShot = new System.Random().Next((int)fireInterval);       
     }
 
     public override IEntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index, LevelManager levelManagerRef)
@@ -21,11 +21,11 @@ public class Turret : Enemy
     {
         obj.overrideUpdate = true;
         obj.enemySpeed = 0;
-        obj.accelerationRate = 0;
+        obj.accelerationRate = 0;        
     }
 
     public override void UpdateEvent(IEntityBehaviour obj)
-    {
+    {        
         timeSinceLastShot = timeSinceLastShot.CountTime(fireInterval);
         if (timeSinceLastShot >= fireInterval)
         {
@@ -34,10 +34,12 @@ public class Turret : Enemy
 
             Quaternion targetRotation = Quaternion.LookRotation((player - turret).normalized, Vector3.up);
 
-            var barrel = obj.transform.GetChild(0);
-            barrel.rotation = targetRotation;
+            Transform aim = obj.transform.GetChild(0);
+            aim.localRotation = targetRotation;
+            Transform barrel = aim.GetChild(0);
 
             BulletBehaivour.InitializeBullet(barrel.position, targetRotation);
+            timeSinceLastShot = 0;
         }
     }
 
