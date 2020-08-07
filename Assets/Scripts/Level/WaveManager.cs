@@ -83,7 +83,7 @@ public class WaveManager {
         Annoy_O_Tron tron = new Annoy_O_Tron();
         CarpetBomber bomber = new CarpetBomber();
 
-        AddEnemyType(new Turret(), 0);
+       // AddEnemyType(new Turret(), 0);
         AddEnemyType(bomber, 6);
         AddEnemyType(tron, 3);
         AddEnemyType(new BouncyWall(), 1);
