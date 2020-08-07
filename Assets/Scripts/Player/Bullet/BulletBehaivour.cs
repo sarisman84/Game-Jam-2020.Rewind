@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody))]
 public class BulletBehaivour : MonoBehaviour {
@@ -85,5 +86,28 @@ public class BulletBehaivour : MonoBehaviour {
         transform.position = position;
         transform.rotation = rotation;
         this.bulletVelocity = bulletVelocity;
+    }
+
+    public static void InitializeBullet(Vector3 firePosition, Quaternion fireRotation)
+    {
+        EffectsManager.GetInstance.CurrentAudioFiles.PlayAudioClip("PlayerShoot", c =>
+        {
+            float result = Random.Range(1f, 2f);
+            c.Player.time = 0;
+            if (TimeHandler.GetInstance.isRewinding)
+            {
+                result = Random.Range(-1f, -0.5f);
+                c.Player.time = c.Player.clip.length / 4f;
+            }
+            c.Player.pitch = result;
+        });
+
+        EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("BulletEffect", firePosition, c =>
+        {
+            c.prefab.transform.rotation = fireRotation;
+        });
+        BulletBehaivour bullet = ObjectPooler.GetPooledObject<BulletBehaivour>();
+        bullet.gameObject.SetActive(true);
+        bullet.Setup(firePosition, fireRotation);
     }
 }

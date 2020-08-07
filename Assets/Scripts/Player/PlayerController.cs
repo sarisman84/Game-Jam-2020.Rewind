@@ -111,36 +111,13 @@ public class PlayerController : MonoBehaviour, IDamageable {
         if (InputManager.GetInstance.IsShooting && !TimeHandler.GetInstance.isRewinding)
         {
 
-            InitializeBullet(aimGameObject.transform.GetChild(1).position, aimGameObject.transform.rotation);
+            BulletBehaivour.InitializeBullet(aimGameObject.transform.GetChild(1).position, aimGameObject.transform.rotation);
             TimeHandler.GetInstance.RecordAction(this);
             InputManager.GetInstance.IsShooting = false;
         }
 
     }
-
-    public void InitializeBullet(Vector3 firePosition, Quaternion fireRotation)
-    {
-        EffectsManager.GetInstance.CurrentAudioFiles.PlayAudioClip("PlayerShoot", c =>
-        {
-            float result = Random.Range(1f, 2f);
-            c.Player.time = 0;
-            if (TimeHandler.GetInstance.isRewinding)
-            {
-                result = Random.Range(-1f, -0.5f);
-                c.Player.time = c.Player.clip.length / 4f;
-            }
-            c.Player.pitch = result;
-        });
-
-        EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("BulletEffect", firePosition, c =>
-        {
-            c.prefab.transform.rotation = fireRotation;
-        });
-        BulletBehaivour bullet = ObjectPooler.GetPooledObject<BulletBehaivour>();
-        bullet.gameObject.SetActive(true);
-        bullet.Setup(firePosition, fireRotation);
-    }
-
+     
     private int _PositionX;
     public int PositionX
     {

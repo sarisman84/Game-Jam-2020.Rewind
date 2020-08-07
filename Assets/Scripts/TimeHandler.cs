@@ -123,7 +123,7 @@ public class TimeHandler {
             yield return new WaitForSeconds(initialDelay);
 
             RecordedAction action = node.Value;
-            player.InitializeBullet(action.playerFirePosition, action.playerAimRotation);
+            BulletBehaivour.InitializeBullet(action.playerFirePosition, action.playerAimRotation);
 
 
             node = node.Next;

@@ -54,7 +54,6 @@ public class WaveManager {
         allSpawnedEnemies.Clear();
         allEnemyTypes.Clear();
 
-
         levelManagerRef = levelManager;
         currentWave = 0;
         foreach (var item in enemyTypes)
@@ -83,6 +82,8 @@ public class WaveManager {
 
         Annoy_O_Tron tron = new Annoy_O_Tron();
         CarpetBomber bomber = new CarpetBomber();
+
+        AddEnemyType(new Turret(), 0);
         AddEnemyType(bomber, 6);
         AddEnemyType(tron, 3);
         AddEnemyType(new BouncyWall(), 1);
@@ -125,7 +126,7 @@ public class WaveManager {
     private void AddEnemyType<E>(E enemy, int minWaveSpawn) where E : IEntity
     {
         if (!allEnemyTypes.Contains(enemy))
-            if (currentWave == minWaveSpawn)
+            if (currentWave >= minWaveSpawn)
             {
                 allEnemyTypes.Add(enemy);
             }
