@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1228181986}
   - component: {fileID: 7876535656103413010}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: Carpet Bomber
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0b86fd3f532dd3649ba489b4951e2ee5, type: 2}
+  - {fileID: 2100000, guid: 10c0eb192fd00324a8f67cca78bcf096, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

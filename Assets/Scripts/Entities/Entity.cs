@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class Entity {
+public class Entity: IEntity {
     public Vector2Int spawnIndex;
 
     protected string modelPath;
@@ -18,9 +18,9 @@ public class Entity {
 
     LevelManager levelManagerRef;
 
-    public virtual EntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index, LevelManager levelManagerRef)
+    public virtual IEntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index, LevelManager levelManagerRef)
     {
-        EntityBehaviour entity = ObjectPooler.GetPooledObject<EntityBehaviour>(Resources.Load<GameObject>($"Entity/{modelPath}"));
+        IEntityBehaviour entity = ObjectPooler.GetPooledObject<EntityBehaviour>(Resources.Load<GameObject>($"Entity/{modelPath}"));
 
         entity.parentClass = this;
         entity.AssignEvents(this);
@@ -34,18 +34,18 @@ public class Entity {
 
 
 
-    public virtual void UpdateEvent(EntityBehaviour obj)
+    public virtual void UpdateEvent(IEntityBehaviour obj)
     {
 
     }
 
-    public virtual void StartEvent(EntityBehaviour obj)
+    public virtual void StartEvent(IEntityBehaviour obj)
     {
 
 
     }
 
-    public virtual void DamageEvent(EntityBehaviour obj, BulletBehaivour incomingBullet)
+    public virtual void DamageEvent(IEntityBehaviour obj, BulletBehaivour incomingBullet)
     {
 
 
@@ -59,5 +59,6 @@ public class Entity {
 
     }
 
+    
 }
 

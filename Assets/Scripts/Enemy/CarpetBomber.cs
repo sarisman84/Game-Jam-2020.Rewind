@@ -15,9 +15,13 @@ public class CarpetBomber : Enemy {
 
 
 
+    public override IEntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index, LevelManager levelManagerRef)
+    {
 
+        return base.SpawnEntity(spawnPos, index, levelManagerRef);
+    }
 
-    public override void DamageEvent(EnemyBehaviour obj, BulletBehaivour bullet)
+    public override void DamageEvent(IEntityBehaviour obj, BulletBehaivour bullet)
     {
 
         base.DamageEvent(obj, bullet);
@@ -28,7 +32,7 @@ public class CarpetBomber : Enemy {
 
     Vector3 previousPosition;
 
-    public override void StartEvent(EnemyBehaviour obj)
+    public override void StartEvent(IEntityBehaviour obj)
     {
 
         obj.enemySpeed = 5f;
@@ -45,7 +49,7 @@ public class CarpetBomber : Enemy {
 
 
 
-    public override void UpdateEvent(EnemyBehaviour obj)
+    public override void UpdateEvent(IEntityBehaviour obj)
     {
         localTimer = localTimer.CountTime(bombingRate);
         if (localTimer == bombingRate)

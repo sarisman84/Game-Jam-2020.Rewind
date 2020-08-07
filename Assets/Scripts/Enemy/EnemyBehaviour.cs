@@ -7,13 +7,13 @@ using UnityEngine.AI;
 using UnityEngine.SocialPlatforms;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class EnemyBehaviour : MonoBehaviour, IDamageable {
+public class EnemyBehaviour : MonoBehaviour, IDamageable, IEntityBehaviour {
     // Start is called before the first frame update
-    public event Action<EnemyBehaviour, BulletBehaivour> onDamageEvent;
-    public event Action<EnemyBehaviour> onStartEvent;
-    public event Action<EnemyBehaviour> onUpdateEvent;
+    event Action<IEntityBehaviour, BulletBehaivour> _onDamageEvent;
+    event Action<IEntityBehaviour> _onStartEvent;
+    event Action<IEntityBehaviour> _onUpdateEvent;
 
-    public Enemy parentClass;
+    public IEntity _parentClass;
 
 
 
@@ -29,7 +29,11 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
     public float attackRange { private get; set; } = 3f;
 
     public NavMeshAgent agent { get; private set; }
-    public PlayerController foundPlayer { get; private set; } 
+    public PlayerController foundPlayer { get; private set; }
+    public IEntity parentClass { set => _parentClass = value; get => _parentClass; }
+    public Action<IEntityBehaviour, BulletBehaivour> onDamageEvent { get => _onDamageEvent; set => _onDamageEvent = value; }
+    public Action<IEntityBehaviour> onStartEvent { get => _onStartEvent; set => _onStartEvent = value; }
+    public Action<IEntityBehaviour> onUpdateEvent { get => _onUpdateEvent; set => _onUpdateEvent = value; }
 
     public void TakeDamage(BulletBehaivour bullet)
     {
@@ -69,7 +73,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
 
     }
 
-  
+
     public void SetNavMeshTarget()
     {
 
@@ -92,7 +96,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable {
         }
     }
 
-    public void AssignEvents(Enemy enemy)
+    public void AssignEvents(IEntity enemy)
     {
         onDamageEvent += enemy.DamageEvent;
         onStartEvent += enemy.StartEvent;

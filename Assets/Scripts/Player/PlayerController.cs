@@ -232,7 +232,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     public void TakeDamage(BulletBehaivour bullet)
     {
       
-        if (!isResetting && !godMode)
+        if (!isResetting && !godMode && manager.IsAlive)
         {
             manager.LooseOneLife();
             EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("PlayerHit", transform.position);

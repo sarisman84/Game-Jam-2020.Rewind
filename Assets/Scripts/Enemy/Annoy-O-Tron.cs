@@ -7,14 +7,20 @@ public class Annoy_O_Tron : Enemy
         
     }
 
-    public override void StartEvent(EnemyBehaviour obj)
+    public override IEntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index, LevelManager levelManagerRef)
+    {
+
+        return base.SpawnEntity(spawnPos, index, levelManagerRef);
+    }
+
+    public override void StartEvent(IEntityBehaviour obj)
     {        
         obj.overrideUpdate = true;
         obj.enemySpeed = 10;
         obj.accelerationRate = 15;
     }
 
-    public override void UpdateEvent(EnemyBehaviour obj)
+    public override void UpdateEvent(IEntityBehaviour obj)
     {
         int distance = 10;
 

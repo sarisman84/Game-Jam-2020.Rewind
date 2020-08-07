@@ -37,6 +37,9 @@ public class PlayerManager {
         }
     }
     MeshRenderer renderer;
+
+    public bool IsAlive { get => amountOfLives > 0; }
+
     private void VisualiseHealth()
     {
 

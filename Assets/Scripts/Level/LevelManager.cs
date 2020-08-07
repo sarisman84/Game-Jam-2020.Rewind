@@ -96,7 +96,6 @@ public class LevelManager : MonoBehaviour {
         if (waveManager.allSpawnedEnemies.Count != 0)
         {
             waveManager.allSpawnedEnemies.ExecuteAction(e => e.gameObject.SetActive(false)).ToList().Clear();
-            waveManager.allCustomTiles.ExecuteAction(t => t.gameObject.SetActive(false)).ToList().Clear();
             TimeHandler.GetInstance.ClearRecordings();
 
         }
