@@ -144,12 +144,14 @@ public class PlayerController : MonoBehaviour, IDamageable {
         Vector3 newPos = levelManager.PlayArea[PositionX, PositionZ].GetWorldPosition(gameObject);
         while (!newPos.IsWithinRadiusOf(transform.position, 3f))
         {
+            controller.isKinematic = true;
             controller.velocity = Vector3.zero;
             yield return new WaitForEndOfFrame();
             transform.position = Vector3.Lerp(transform.position, newPos, 4f * Time.deltaTime);
             isResetting = true;
         }
         transform.position = newPos;
+        controller.isKinematic = false;
         if (isResetting)
             isResetting = false;
         yield return null;

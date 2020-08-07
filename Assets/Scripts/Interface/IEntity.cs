@@ -4,6 +4,8 @@ using UnityEngine;
 
 public interface IEntity
 {
+    Vector2Int spawnIndex { get; set; }
+
     IEntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index, LevelManager levelManagerRef);
 
     void DamageEvent(IEntityBehaviour obj, BulletBehaivour bullet);

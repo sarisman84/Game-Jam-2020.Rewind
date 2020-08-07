@@ -11,13 +11,16 @@ using Westwind.Scripting;
 
 public class Enemy : IEntity {
     protected string modelPath;
-    protected Vector2Int spawnIndex;
+
     public Enemy(string modelPath)
     {
         this.modelPath = modelPath;
     }
 
     LevelManager levelManagerRef;
+
+    public Vector2Int spawnIndex { get; set; }
+
     public virtual IEntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index, LevelManager levelManager)
     {
         levelManagerRef = levelManager;
@@ -62,6 +65,6 @@ public class Enemy : IEntity {
 
     }
 
-   
+
 }
 

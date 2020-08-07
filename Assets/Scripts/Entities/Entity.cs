@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 public class Entity: IEntity {
-    public Vector2Int spawnIndex;
+  
 
     protected string modelPath;
     public Entity(string modelPath)
@@ -17,6 +17,8 @@ public class Entity: IEntity {
 
 
     LevelManager levelManagerRef;
+
+    public Vector2Int spawnIndex { get; set; }
 
     public virtual IEntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index, LevelManager levelManagerRef)
     {
