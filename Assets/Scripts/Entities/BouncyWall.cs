@@ -12,10 +12,10 @@ public class BouncyWall : Entity {
 
     }
 
-    public override EntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index)
+    public override EntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index, LevelManager levelManagerRef)
     {
 
-        return base.SpawnEntity(spawnPos, index);
+        return base.SpawnEntity(spawnPos, index, levelManagerRef);
     }
     public override void DamageEvent(EntityBehaviour obj, BulletBehaivour incomingBullet)
     {

@@ -78,5 +78,6 @@ public class PlayerManager {
         if (maxAmountOfLives == 0) SetLifeAmount(3);
 
         amountOfLives = maxAmountOfLives;
+        VisualiseHealth();
     }
 }

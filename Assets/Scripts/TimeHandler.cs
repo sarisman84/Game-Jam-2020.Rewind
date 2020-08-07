@@ -55,10 +55,12 @@ public class TimeHandler {
         //STOP CRASHING
     }
     Coroutine rewind, nextWave;
-    public void ConfirmAllEnemyDeaths()
-    {
 
-        if (LevelManager.GetInstance.waveManager.areAllEnemiesDead)
+    LevelManager levelManagerRef;
+    public void ConfirmAllEnemyDeaths(LevelManager levelManager)
+    {
+        levelManagerRef = levelManager;
+        if (levelManager.waveManager.areAllEnemiesDead)
         {
             if (rewind != null)
                 PlayerReference.StopCoroutine(rewind);
@@ -94,7 +96,7 @@ public class TimeHandler {
         yield return PlayRecordedActionsOfListElement(allRecordedActions, player, 0.5f);
         if (nextWave != null)
             player.StopCoroutine(nextWave);
-        nextWave = player.StartCoroutine(LevelManager.GetInstance.waveManager.DeployNextWave());
+        nextWave = player.StartCoroutine(levelManagerRef.waveManager.DeployNextWave());
         player.ResetPositionToSpawn();
 
     }

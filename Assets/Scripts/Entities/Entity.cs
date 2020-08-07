@@ -16,9 +16,9 @@ public class Entity {
     }
 
 
+    LevelManager levelManagerRef;
 
-
-    public virtual EntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index)
+    public virtual EntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index, LevelManager levelManagerRef)
     {
         EntityBehaviour entity = ObjectPooler.GetPooledObject<EntityBehaviour>(Resources.Load<GameObject>($"Entity/{modelPath}"));
 
@@ -27,7 +27,7 @@ public class Entity {
         entity.spawnPos = spawnPos;
         entity.transform.position = spawnPos;
         entity.gameObject.SetActive(true);
-        LevelManager.GetInstance.PlayArea[index.x, index.y].entity = entity.gameObject;
+        levelManagerRef.PlayArea[index.x, index.y].entity = entity.gameObject;
         spawnIndex = index;
         return entity;
     }

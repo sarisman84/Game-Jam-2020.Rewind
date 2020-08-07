@@ -11,7 +11,7 @@ public class WaveManager {
 
     public int currentWave { get; set; } = 0;
     public List<EnemyBehaviour> allSpawnedEnemies = new List<EnemyBehaviour>();
-    List<Enemy> allEnemyTypes = new List<Enemy>();
+    public List<Enemy> allEnemyTypes = new List<Enemy>();
 
     public List<EntityBehaviour> allCustomTiles = new List<EntityBehaviour>();
 
@@ -47,16 +47,21 @@ public class WaveManager {
         waveCounter = screenText;
     }
 
+    LevelManager levelManagerRef;
 
-
-    public IEnumerator DeployFirstWave<E>(int amountOfEnemies, float spawnDelay, params E[] enemyTypes) where E : Enemy
+    public IEnumerator DeployFirstWave<E>(LevelManager levelManager, int amountOfEnemies, float spawnDelay, params E[] enemyTypes) where E : Enemy
     {
+        allSpawnedEnemies.Clear();
+        allEnemyTypes.Clear();
+        allCustomTiles.Clear();
+
+        levelManagerRef = levelManager;
         currentWave = 0;
         foreach (var item in enemyTypes)
         {
             for (int i = 0; i < amountOfEnemies; i++)
             {
-                yield return CreateEnemyAtRandomPosition(item, spawnDelay);
+                yield return CreateEnemyAtRandomPosition(item, spawnDelay, levelManager);
 
                 DisplayAllLivingEnemies();
             }
@@ -100,8 +105,8 @@ public class WaveManager {
             int amm = Random.Range(0, 4);
             for (int i = 0; i < amm; i++)
             {
-                yield return CreateEnemyAtRandomPosition(e, 0.05f);
-                yield return CreateEntityAtRandomPosition(0.05f);
+                yield return CreateEnemyAtRandomPosition(e, 0.05f, levelManagerRef);
+                yield return CreateEntityAtRandomPosition(0.05f, levelManagerRef);
                 DisplayAllLivingEnemies();
 
             }
@@ -125,22 +130,22 @@ public class WaveManager {
             }
     }
 
-    private IEnumerator CreateEntityAtRandomPosition(float v)
+    private IEnumerator CreateEntityAtRandomPosition(float v, LevelManager levelManagerRef)
     {
-        Vector2Int index = LevelManager.GetInstance.GetGetRandomGridPosition<Vector2Int>().ToVector2Int();
-        Vector3 spawnPos = LevelManager.GetInstance.PlayArea[index.x, index.y].GetWorldPosition();
+        Vector2Int index = levelManagerRef.GetGetRandomGridPosition();
+        Vector3 spawnPos = levelManagerRef.PlayArea[index.x, index.y].GetWorldPosition();
         EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("EnemySpawn", spawnPos);
         yield return new WaitForSeconds(v);
-        allCustomTiles.Add(new BouncyWall().SpawnEntity(spawnPos, index));
+        allCustomTiles.Add(new BouncyWall().SpawnEntity(spawnPos, index, levelManagerRef));
     }
 
-    IEnumerator CreateEnemyAtRandomPosition(Enemy e, float delay)
+    IEnumerator CreateEnemyAtRandomPosition(Enemy e, float delay, LevelManager levelManager)
     {
-        Vector2Int index = LevelManager.GetInstance.GetGetRandomGridPosition<Vector2Int>().ToVector2Int();
-        Vector3 spawnPos = LevelManager.GetInstance.PlayArea[index.x, index.y].GetWorldPosition();
+        Vector2Int index = levelManagerRef.GetGetRandomGridPosition();
+        Vector3 spawnPos = levelManagerRef.PlayArea[index.x, index.y].GetWorldPosition();
         EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("EnemySpawn", spawnPos);
         yield return new WaitForSeconds(delay);
-        allSpawnedEnemies.Add(e.SpawnEnemy(spawnPos, index));
+        allSpawnedEnemies.Add(e.SpawnEnemy(spawnPos, index, levelManager));
 
     }
 

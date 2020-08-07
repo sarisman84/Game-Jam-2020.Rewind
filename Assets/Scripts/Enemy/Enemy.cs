@@ -14,8 +14,10 @@ public class Enemy : Entity {
     {
     }
 
-    public EnemyBehaviour SpawnEnemy(Vector3 spawnPos, Vector2Int index)
+    LevelManager levelManagerRef;
+    public EnemyBehaviour SpawnEnemy(Vector3 spawnPos, Vector2Int index, LevelManager levelManager)
     {
+        levelManagerRef = levelManager;
         EnemyBehaviour enemy = ObjectPooler.GetPooledObject(Resources.Load<EnemyBehaviour>($"Enemies/{modelPath}"));
 
         enemy.parentClass = this;
@@ -23,7 +25,7 @@ public class Enemy : Entity {
         enemy.spawnPos = spawnPos;
         enemy.transform.position = spawnPos;
         enemy.gameObject.SetActive(true);
-        GetInstance.PlayArea[index.x, index.y].entity = enemy.gameObject;
+        levelManager.PlayArea[index.x, index.y].entity = enemy.gameObject;
         spawnIndex = index;
         return enemy;
     }
@@ -44,7 +46,7 @@ public class Enemy : Entity {
     public virtual void DamageEvent(EnemyBehaviour obj, BulletBehaivour bullet)
     {
         obj.gameObject.SetActive(false);
-        TimeHandler.GetInstance.ConfirmAllEnemyDeaths();
+        TimeHandler.GetInstance.ConfirmAllEnemyDeaths(levelManagerRef);
 
         bullet.physics.velocity = Vector3.zero;
         bullet.gameObject.SetActive(false);

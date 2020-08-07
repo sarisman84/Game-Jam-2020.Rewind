@@ -44,6 +44,8 @@ public class PlayerController : MonoBehaviour, IDamageable {
         TimeHandler.GetInstance.PlayerReference = this;
         manager = new PlayerManager(this);
 
+        gameObject.SetActive(false);
+
 
         //Move the player to the middle of the field.
 
@@ -140,14 +142,14 @@ public class PlayerController : MonoBehaviour, IDamageable {
     public int PositionX
     {
         get { return _PositionX; }
-        set { _PositionX = Mathf.Clamp(value, 0, LevelManager.GetInstance.PlayArea.GetLength(0) - 1); }
+        set { _PositionX = Mathf.Clamp(value, 0, levelManager.PlayArea.GetLength(0) - 1); }
     }
 
     private int _PositionZ;
     public int PositionZ
     {
         get { return _PositionZ; }
-        set { _PositionZ = Mathf.Clamp(value, 0, LevelManager.GetInstance.PlayArea.GetLength(1) - 1); }
+        set { _PositionZ = Mathf.Clamp(value, 0, levelManager.PlayArea.GetLength(1) - 1); }
     }
 
     bool isResetting = false;
@@ -159,7 +161,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
     private IEnumerator MoveWithinGrid()
     {
         controller.velocity = Vector3.zero;
-        Vector3 newPos = LevelManager.GetInstance.PlayArea[PositionX, PositionZ].GetWorldPosition(gameObject);
+        Vector3 newPos = levelManager.PlayArea[PositionX, PositionZ].GetWorldPosition(gameObject);
         while (!newPos.IsWithinRadiusOf(transform.position, 3f))
         {
             yield return new WaitForEndOfFrame();
