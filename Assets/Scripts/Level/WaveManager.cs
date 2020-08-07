@@ -14,7 +14,7 @@ public class WaveManager {
     public List<IEntity> allEntityTypes = new List<IEntity>();
     public List<IEntityBehaviour> summonedEnemies = new List<IEntityBehaviour>();
 
-
+    private const int BOSSWAVE = 9;
 
     TMP_Text waveCounter;
 
@@ -81,8 +81,13 @@ public class WaveManager {
     public IEnumerator DeployNextWave()
     {
         TimeHandler.GetInstance.latestList++;
+        summonedEnemies.ExecuteAction(s => s.gameObject.SetActive(false));
+        summonedEnemies.Clear();
+
 
         yield return new WaitForSeconds(1.35f);
+
+       
 
         Annoy_O_Tron tron = new Annoy_O_Tron();
         CarpetBomber bomber = new CarpetBomber();
@@ -91,14 +96,13 @@ public class WaveManager {
         AddEntityType(tron, 3);
         AddEntityType(new Slime(), 4);
         AddEntityType(bomber, 6);
-        AddEntityType(new Turret(), 10);
-        AddEntityType(new Turret(), 13);//boss turret tobe
+        AddEntityType(new Turret(), 8);
+        AddEntityType(new Boss(), 20);
 
 
 
         IEnumerator RevivePreviousEnemies(IEntityBehaviour e)
         {
-
             (e as EnemyBehaviour)?.ResetPositionToSpawn();
             e.AssignEvents(e.parentClass);
             e.gameObject.SetActive(true);
@@ -107,8 +111,6 @@ public class WaveManager {
 
         }
         yield return allSpawnedEnemies.ExecuteAction(RevivePreviousEnemies);
-
-
 
         IEnumerator AddExtraEnemies(IEntity e)
         {
@@ -122,12 +124,14 @@ public class WaveManager {
         }
         yield return allEntityTypes.ExecuteAction(AddExtraEnemies);
 
+        if (currentWave % BOSSWAVE == 0)
+        {
+            addBosses();
+        }      
+
         currentWave++;
         Debug.Log($"Current Wave (at DeployNextWave):{currentWave}");
         waveCounter.text = $"Wave:{currentWave}";
-
-
-
     }
 
     private void AddEntityType<E>(E entity, int minWaveSpawn) where E : IEntity
@@ -139,6 +143,22 @@ public class WaveManager {
             }
     }
 
+    public void addBosses()
+    {
+        for (int i = 0; i < currentWave / BOSSWAVE; i++)
+        {
+            CreateBossAtRandomPosition(new Boss(), levelManagerRef);
+        }
+    }
+    
+
+    void CreateBossAtRandomPosition<E>(E boss, LevelManager levelManager) where E : IEntity
+    {
+        Vector2Int index = levelManagerRef.GetGetRandomGridPosition();
+        Vector3 spawnPos = levelManagerRef.PlayArea[index.x, index.y].GetWorldPosition();
+        EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("EnemySpawn", spawnPos);
+        summonedEnemies.Add(boss.SpawnEntity(spawnPos, index, levelManager));
+    }
 
 
     public IEnumerator CreateEnemyAtRandomPosition<E>(E e, float delay, LevelManager levelManager, bool summoned = false) where E : IEntity
