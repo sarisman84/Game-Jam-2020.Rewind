@@ -15,7 +15,7 @@ public class LevelManager : MonoBehaviour {
 
 
     public GameObject wallPrefab;
-    public Tile[,] playArea;
+    public Tile[,] playArea = new Tile[71,51];
 
     public Tile[,] PlayArea => playArea;
     //private Tile[,] PlayArea;
@@ -87,8 +87,7 @@ public class LevelManager : MonoBehaviour {
     public void CreateLevel()
     {
         //Transform floorParent = CreateParent("Floor");
-        StartCoroutine(_CreateLevel());
-
+        StartCoroutine(_CreateLevel());        
     }
 
     private IEnumerator _CreateLevel()

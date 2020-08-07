@@ -62,6 +62,9 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     void Start()
     {
+        Debug.Log(levelManager);
+        Debug.Log(levelManager.playArea);
+        Debug.Log(levelManager.playArea.GetLength(0));
         _PositionX = (levelManager.PlayArea.GetLength(0) - 1) / 2;
         _PositionZ = (levelManager.PlayArea.GetLength(1) - 1) / 2;
 
