@@ -33,7 +33,7 @@ public class PlayerManager {
         VisualiseHealth();
         if (amountOfLives <= 0)
         {
-            KillPlayer();
+            behaivour.StartCoroutine(KillPlayer());
         }
     }
     MeshRenderer renderer;
@@ -64,8 +64,10 @@ public class PlayerManager {
         renderer.sharedMaterial.color = newColor;
     }
 
-    private void KillPlayer()
+    private IEnumerator KillPlayer()
     {
+        EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("PlayerDeath", behaivour.transform.position);
+        yield return new WaitForSeconds(0.5f);
         behaivour.gameObject.SetActive(false);
         MenuScript.GetInstance.GameOver();
         onPlayerDeath?.Invoke();

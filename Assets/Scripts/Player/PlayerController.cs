@@ -163,10 +163,11 @@ public class PlayerController : MonoBehaviour, IDamageable {
     /// 
     private IEnumerator MoveWithinGrid()
     {
-        controller.velocity = Vector3.zero;
+        
         Vector3 newPos = levelManager.PlayArea[PositionX, PositionZ].GetWorldPosition(gameObject);
         while (!newPos.IsWithinRadiusOf(transform.position, 3f))
         {
+            controller.velocity = Vector3.zero;
             yield return new WaitForEndOfFrame();
             transform.position = Vector3.Lerp(transform.position, newPos, 4f * Time.deltaTime);
             isResetting = true;
@@ -182,7 +183,7 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
             b.physics.velocity = Vector3.zero;
             b.gameObject.SetActive(false);
-            EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("EnemyDeath", b.transform.position);
+            EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("BulletDeath", b.transform.position);
         }
         );
 
@@ -230,10 +231,15 @@ public class PlayerController : MonoBehaviour, IDamageable {
 
     public void TakeDamage(BulletBehaivour bullet)
     {
+      
         if (!isResetting && !godMode)
+        {
             manager.LooseOneLife();
+            EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("PlayerHit", transform.position);
+        }
         if (bullet == null) return;
         bullet.physics.velocity = Vector3.zero;
         bullet.gameObject.SetActive(false);
+        
     }
 }

@@ -55,7 +55,7 @@ public class CarpetBomber : Enemy {
                 BulletBehaivour bullet = ObjectPooler.GetPooledObject<BulletBehaivour>();
                 bullet.Setup(previousPosition, obj.transform.rotation, 0);
                 bullet.gameObject.SetActive(true);
-                EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("EnemySpawn", bullet.transform.position);
+                EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("BulletSpawn", bullet.transform.position);
             }
             previousPosition = obj.transform.position;
             localTimer = 0;
