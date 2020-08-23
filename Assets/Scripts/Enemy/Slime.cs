@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Slime : Enemy {
 
@@ -37,9 +38,10 @@ public class Slime : Enemy {
 
     public override void DamageEvent(IEntityBehaviour obj, BulletBehaivour bullet)
     {
-        for (int i = 0; i < 4; i++)
+        int amm = Random.Range(1, 3);
+        for (int i = 0; i < amm; i++)
         {
-            manager.StartCoroutine(manager.waveManager.CreateEnemyAtLocalPosition(new SummonedSlime(), 0.05f, manager, true, ExtendedVector3.RandomPositionWithinRange(obj.transform.position, 1), o => o.transform.localScale = Vector3.one * 0.5f));
+            manager.StartCoroutine(manager.waveManager.CreateEnemyAtLocalPosition(new SummonedSlime(), 0.05f, manager, true, ExtendedVector3.RandomPositionWithinRange(obj.transform.position, 1), o => o.transform.localScale = Vector3.one * 0.8f));
 
 
         }

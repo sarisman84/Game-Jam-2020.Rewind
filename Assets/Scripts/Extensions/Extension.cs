@@ -5,19 +5,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using static WaveManager;
 
 public static class Extension {
 
 
     public static IEnumerable<T> ExecuteAction<T>(this IEnumerable<T> list, params Action<T>[] method)
     {
-        foreach (var item in list)
+        foreach ((T item, Action<T> executeMethod) in list.SelectMany(item => method.Select(executeMethod => (item, executeMethod))))
         {
-            foreach (var executeMethod in method)
-            {
-                executeMethod?.Invoke(item);
-            }
+            executeMethod?.Invoke(item);
         }
+
         return list;
     }
 
@@ -60,16 +59,28 @@ public static class Extension {
         file.Play();
     }
 
-
+    public static bool Contains(this List<EntityType> list, IEntity entity)
+    {
+        foreach (var item in list)
+        {
+            if (item.Equals(entity))
+                return true;
+        }
+        return false;
+    }
     public static void PlayParticleEffectAt(this List<ParticleEffect> list, string name, Vector3 position, bool follow = false, params Action<ParticleEffect>[] customEffects)
     {
+        
         ParticleEffect effect = list.Find(f => f.particleName.Contains(name));
+        effect.ClearLeftoverParticles();
         if (effect == null) return;
-        foreach (var item in customEffects)
+        for (int i = 0; i < customEffects.Length; i++)
         {
+            Action<ParticleEffect> item = customEffects[i];
             item?.Invoke(effect);
         }
         effect.PlayEffect(position, follow);
+
     }
 
 

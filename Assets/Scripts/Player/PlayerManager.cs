@@ -48,8 +48,8 @@ public class PlayerManager {
         switch (amountOfLives)
         {
             case 3:
-                newColor = Color.cyan;
-                newEmissiveColor = Color.blue;
+                newColor = originalColor;
+                newEmissiveColor = originalEmissiveColor;
                 break;
             case 2:
                 newColor = Color.green;
@@ -57,7 +57,7 @@ public class PlayerManager {
                 break;
 
             case 1:
-                newColor = Color.yellow;
+                newColor = Color.red;
                 newEmissiveColor = Color.red;
                 break;
 
@@ -75,6 +75,7 @@ public class PlayerManager {
         behaivour.gameObject.SetActive(false);
         MenuScript.GetInstance.GameOver();
         onPlayerDeath?.Invoke();
+        Time.timeScale = 0.01f;
     }
 
     public void RevivePlayer()
@@ -86,5 +87,13 @@ public class PlayerManager {
         amountOfLives = maxAmountOfLives;
         VisualiseHealth();
         PostProcessingManager.GetInstance.DisableTimeRewindPP();
+        Time.timeScale = 1f;
+    }
+
+    public void HealPlayerBy(int value)
+    {
+        amountOfLives += value;
+        amountOfLives = Mathf.Clamp(amountOfLives, 0, maxAmountOfLives);
+        VisualiseHealth();
     }
 }

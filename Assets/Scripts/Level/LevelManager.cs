@@ -87,14 +87,17 @@ public class LevelManager : MonoBehaviour {
     //By calling this method, the game starts.
     public void CreateLevel()
     {
+        hasStarted = true;
         //Transform floorParent = CreateParent("Floor");
         StartCoroutine(_CreateLevel());
     }
 
+    bool hasStarted = false;
     private IEnumerator _CreateLevel()
     {
         EffectsManager.GetInstance.CurrentBackgroundMusic.Play();
         Transform enemyParent = CreateParent("Enemies");
+        yield return new WaitForEndOfFrame();
         if (waveManager.allSpawnedEnemies.Count != 0)
         {
             waveManager.allSpawnedEnemies.ExecuteAction(e => e.gameObject.SetActive(false)).ToList().Clear();
@@ -158,9 +161,20 @@ public class LevelManager : MonoBehaviour {
         return i - playArea.GetLength(0) / 2;
     }
 
+    TimeHandler handler;
+
+    public bool hasAlreadyRewinded { private get; set; }
     // Update is called once per frame
     void Update()
     {
+
+        if (!TimeHandler.GetInstance.isRewinding && hasStarted)
+        {
+            handler = handler ?? TimeHandler.GetInstance;
+
+            handler.countdownUntilRewind = handler.countdownUntilRewind.CountTime(TimeHandler.MAXCOUNTDOWN);
+            hasAlreadyRewinded = handler.AttemptToRewind(this);
+        }
 
     }
 

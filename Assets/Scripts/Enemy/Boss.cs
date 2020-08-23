@@ -2,20 +2,24 @@
 using Object = UnityEngine;
 using System;
 
-public class Boss : Enemy
-{
+public class Boss : Enemy {
     private const float FIREINTERVAL = 0.2f;
     private float timeSinceLastShot = 0;
     private const float INITIALDELAY = 2f;
     private const float ROTATIONSPEED = 0.01f;
     private bool spawnDelay = true;
 
+    public int currentHealth;
+    public int maxHealth;
+
     public Boss() : base("Boss")
     {
+        maxHealth = 30;
     }
 
     public override IEntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index, LevelManager levelManagerRef)
     {
+        currentHealth = maxHealth;
         return base.SpawnEntity(spawnPos, index, levelManagerRef);
     }
 
@@ -34,7 +38,8 @@ public class Boss : Enemy
             if (timeSinceLastShot >= INITIALDELAY)
                 spawnDelay = false;
         }
-        else { 
+        else
+        {
             timeSinceLastShot = timeSinceLastShot.CountTime(FIREINTERVAL);
 
             if (timeSinceLastShot >= FIREINTERVAL)
@@ -50,11 +55,20 @@ public class Boss : Enemy
 
                 //shoot
                 Transform barrel = aim.GetChild(0);
-                BulletBehaivour.InitializeBullet(barrel.position, targetRotation);
+                BulletBehaivour.InitializeBullet(obj.gameObject, barrel.position, targetRotation);
 
                 timeSinceLastShot = 0;
             }
         }
+    }
+
+    public override void DamageEvent(IEntityBehaviour obj, BulletBehaivour bullet)
+    {
+        if (currentHealth <= 0)
+            base.DamageEvent(obj, bullet);
+        currentHealth -= 1;
+        EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("PlayerHit", obj.transform.position);
+
     }
 
 

@@ -86,6 +86,15 @@ public class ParticleEffect {
 
     public string particleName;
     public ParticleSystem prefab;
+    List<GameObject> spawnedParticles = new List<GameObject>();
+
+    public void ClearLeftoverParticles()
+    {
+        if(spawnedParticles.Count > 20){
+            spawnedParticles.ExecuteAction(g => g.gameObject.SetActive(false));
+            spawnedParticles.Clear();
+        }
+    }
 
     public void CreateParticleSystem(GameObject owner)
     {
@@ -107,6 +116,7 @@ public class ParticleEffect {
             particleSystem.gameObject.SetActive(true);
             particleSystem.transform.position = position;
             particleSystem.Play();
+            spawnedParticles.Add(particleSystem.gameObject);
 
 
 

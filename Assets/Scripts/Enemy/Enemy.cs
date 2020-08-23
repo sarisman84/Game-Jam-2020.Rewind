@@ -17,7 +17,7 @@ public class Enemy : IEntity {
         this.modelPath = modelPath;
     }
 
-    LevelManager levelManagerRef;
+    public LevelManager levelManagerRef;
 
     public Vector2Int spawnIndex { get; set; }
 
@@ -52,16 +52,22 @@ public class Enemy : IEntity {
     public virtual void DamageEvent(IEntityBehaviour obj, BulletBehaivour bullet)
     {
         obj.gameObject.SetActive(false);
-        TimeHandler.GetInstance.ConfirmAllEnemyDeaths(levelManagerRef);
+        //TimeHandler.GetInstance.AttemptToRewind(levelManagerRef);
+        levelManagerRef.waveManager.AttemptToGoToNextWave();
 
-        bullet.physics.velocity = Vector3.zero;
-        bullet.gameObject.SetActive(false);
+
+        if(bullet != null)
+        {
+            bullet.physics.velocity = Vector3.zero;
+            bullet.gameObject.SetActive(false);
+        }
+       
 
         obj.onDamageEvent -= DamageEvent;
         obj.onStartEvent -= StartEvent;
         obj.onUpdateEvent -= UpdateEvent;
 
-
+       
 
     }
 

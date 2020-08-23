@@ -2,14 +2,13 @@
 using Object = UnityEngine;
 using System;
 
-public class Turret : Enemy
-{
+public class Turret : Enemy {
     private float fireInterval = 5;
     private float timeSinceLastShot = 0;
 
     public Turret() : base("Turret")
     {
-        timeSinceLastShot = new System.Random().Next((int)fireInterval);       
+        timeSinceLastShot = new System.Random().Next((int)fireInterval);
     }
 
     public override IEntityBehaviour SpawnEntity(Vector3 spawnPos, Vector2Int index, LevelManager levelManagerRef)
@@ -21,11 +20,11 @@ public class Turret : Enemy
     {
         obj.overrideUpdate = true;
         obj.enemySpeed = 0;
-        obj.accelerationRate = 0;        
+        obj.accelerationRate = 0;
     }
 
     public override void UpdateEvent(IEntityBehaviour obj)
-    {        
+    {
         timeSinceLastShot = timeSinceLastShot.CountTime(fireInterval);
         if (timeSinceLastShot >= fireInterval)
         {
@@ -38,7 +37,7 @@ public class Turret : Enemy
             aim.localRotation = targetRotation;
             Transform barrel = aim.GetChild(0);
 
-            BulletBehaivour.InitializeBullet(barrel.position, targetRotation);
+            BulletBehaivour.InitializeBullet(obj.gameObject, barrel.position, targetRotation);
             timeSinceLastShot = 0;
         }
     }

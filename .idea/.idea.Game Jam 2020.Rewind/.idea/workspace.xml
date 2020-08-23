@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="6dbe33eb-0e82-460b-a62a-82dd490bc449" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Player.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Player.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Turret.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Turret.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefab/Player.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefab/Player.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefab/Resources/Enemies/Summoned Slime.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefab/Resources/Enemies/Summoned Slime.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/SampleScene/Profile.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/SampleScene/Profile.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/EffectsManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/EffectsManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Enemy/Boss.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Enemy/Boss.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Enemy/Enemy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Enemy/Enemy.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Enemy/EnemyBehaviour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Enemy/EnemyBehaviour.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Enemy/Slime.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Enemy/Slime.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Enemy/Turret.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Enemy/Turret.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Entities/EntityBehaviour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Entities/EntityBehaviour.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Extensions/Extension.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Extensions/Extension.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Level/LevelManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Level/LevelManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Level/WaveManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Level/WaveManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/Bullet/BulletBehaivour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/Bullet/BulletBehaivour.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/PlayerController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Player/PlayerManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Player/PlayerManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/TimeHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/TimeHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/UI/1x/Asset 1.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Textures/UI/1x/Asset 1.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/UI/1x/Asset 2.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Textures/UI/1x/Asset 2.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/UI/1x/Asset 3.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Textures/UI/1x/Asset 3.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/UI/move.png.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Textures/UI/move.png.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/Assets/Scripts/Player/PlayerController.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1gF83ydruM0udwMkn193RqoovjR" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Discover.Launch.Via.Unity" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C#" />
+  </component>
+  <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
+    <configuration name="Standalone Player" type="RunUnityExe" factoryName="Unity Executable">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/Build/New folder (4)\Revert.exe" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\epicd\Documents\Unity Projects\Game Jam 2020.Rewind\Build\New folder (4)" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Attach to Unity Editor &amp; Play" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="UNITY_ATTACH_AND_PLAY" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <option name="selectedOptions">
+        <set />
+      </option>
+      <method v="2" />
+    </configuration>
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
+      <option name="allowRunningInParallel" value="false" />
+      <option name="listenPortForConnections" value="false" />
+      <option name="pid" />
+      <option name="selectedOptions">
+        <set />
+      </option>
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6dbe33eb-0e82-460b-a62a-82dd490bc449" name="Default Changelist" comment="" />
+      <created>1597698787953</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1597698787953</updated>
+      <workItem from="1597698790819" duration="296000" />
+      <workItem from="1598200515951" duration="348000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="true" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="EditMode" />
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="803" y="364" key="SettingsEditor" timestamp="1597699080301">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="803" y="364" key="SettingsEditor/-2560.0.2560.1440/0.0.2560.1440@0.0.2560.1440" timestamp="1597699080301" />
+  </component>
+</project>

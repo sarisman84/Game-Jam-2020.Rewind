@@ -37,10 +37,11 @@ public class TimeHandler {
 
     }
 
+    bool isCleaningRecordings;
 
     public void RecordAction(PlayerController player)
     {
-
+        if (isCleaningRecordings) return;
         RecordedAction action = new RecordedAction(player.transform.position, player.aimGameObject.transform.GetChild(1).position, player.aimGameObject.transform.rotation, Time.time);
 
 
@@ -54,21 +55,32 @@ public class TimeHandler {
         CreatePlayerGhost(PlayerReference, action);
         //STOP CRASHING
     }
-    Coroutine rewind, nextWave;
+    Coroutine rewind;
 
     LevelManager levelManagerRef;
-    public void ConfirmAllEnemyDeaths(LevelManager levelManager)
+
+
+    public bool AttemptToRewind(LevelManager levelManager)
     {
         levelManagerRef = levelManager;
-        if (levelManager.waveManager.areAllEnemiesDead)
-        {
-            if (rewind != null)
-                PlayerReference.StopCoroutine(rewind);
-            rewind = PlayerReference.StartCoroutine(PlayRecordedActions(PlayerReference));
+        if (PlayerReference.gameObject.activeSelf)
+            if (countdownUntilRewind == MAXCOUNTDOWN && allRecordedActions.Count != 0)
+            {
+                if (rewind != null)
+                    levelManager.StopCoroutine(rewind);
+                rewind = levelManager.StartCoroutine(PlayRecordedActions(PlayerReference));
+
+                countdownUntilRewind = 0;
+                return true;
+            }
 
 
-        }
+        return false;
     }
+
+    public float countdownUntilRewind;
+
+    public const int MAXCOUNTDOWN = 5;
 
     void CreatePlayerGhost(PlayerController player, RecordedAction action)
     {
@@ -89,21 +101,24 @@ public class TimeHandler {
     bool[] areRewindsDone;
     public IEnumerator PlayRecordedActions(PlayerController player)
     {
-        yield return null;
+
         areRewindsDone = new bool[allRecordedActions.Count];
         index = 0;
 
         yield return PlayRecordedActionsOfListElement(allRecordedActions, player, 0.5f);
-        if (nextWave != null)
-            player.StopCoroutine(nextWave);
-        nextWave = player.StartCoroutine(levelManagerRef.waveManager.DeployNextWave());
-        player.ResetPositionToSpawn();
+        StopRewindEffects();
+
+        countdownUntilRewind = 0;
+        levelManagerRef.hasAlreadyRewinded = false;
+
 
     }
 
-    private bool AreRewindsDone()
+    private void StopRewindEffects()
     {
-        return false;
+        EffectsManager.GetInstance.CurrentBackgroundMusic.time = 0;
+        EffectsManager.GetInstance.CurrentBackgroundMusic.pitch = 1;
+        PostProcessingManager.GetInstance.DisableTimeRewindPP();
     }
 
     IEnumerator PlayRecordedActionsOfListElement(LinkedList<RecordedAction> queue, PlayerController player, float initialDelay)
@@ -111,7 +126,7 @@ public class TimeHandler {
 
 
         LinkedListNode<RecordedAction> node = queue.First;
-        float reductionAmm = 0.05f;
+
         PostProcessingManager.GetInstance.EnableTimeRewindPP();
         EffectsManager.GetInstance.CurrentBackgroundMusic.pitch = -1;
 
@@ -124,14 +139,13 @@ public class TimeHandler {
             yield return new WaitForSeconds(initialDelay);
 
             RecordedAction action = node.Value;
-            BulletBehaivour.InitializeBullet(action.playerFirePosition, action.playerAimRotation);
+            BulletBehaivour.InitializeBullet(PlayerReference.gameObject, action.playerFirePosition, action.playerAimRotation);
 
 
             node = node.Next;
-            initialDelay -= reductionAmm;
-            initialDelay = Mathf.Clamp(initialDelay, 0.15f, float.MaxValue);
-            reductionAmm -= 0.005f;
-            reductionAmm = Mathf.Clamp(reductionAmm, 0.01f, float.MaxValue);
+
+            initialDelay = Mathf.Clamp(0.15f / queue.Count, Mathf.Max(0.1f, 0.15f / queue.Count), float.MaxValue);
+
 
 
         }
@@ -141,7 +155,7 @@ public class TimeHandler {
             this.index++;
             this.index = Mathf.Clamp(index, 0, areRewindsDone.Length - 1);
         }
-
+        isRewinding = false;
         yield return null;
 
 
@@ -151,6 +165,26 @@ public class TimeHandler {
     {
         allRecordedActions.ExecuteAction(r => UnityEngine.Object.Destroy(r.playerClone));
         allRecordedActions.Clear();
+    }
+
+    public IEnumerator DelayedClearRecordings()
+    {
+        levelManagerRef.hasAlreadyRewinded = true;
+        levelManagerRef.StopCoroutine(rewind);
+        StopRewindEffects();
+        isCleaningRecordings = true;
+        yield return new WaitForEndOfFrame();
+        IEnumerator RemoveRecording(RecordedAction r)
+        {
+            UnityEngine.Object.Destroy(r.playerClone);
+            EffectsManager.GetInstance.CurrentParticleEffects.PlayParticleEffectAt("BulletDeath", r.playerClone.transform.position);
+            yield return new WaitForSeconds(0.15f / allRecordedActions.Count);
+        }
+
+        yield return allRecordedActions.ExecuteAction(RemoveRecording);
+        allRecordedActions.Clear();
+        levelManagerRef.hasAlreadyRewinded = false;
+        isCleaningRecordings = false;
     }
 
 

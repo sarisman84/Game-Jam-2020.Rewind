@@ -9,9 +9,21 @@ using TMPro;
 
 public class WaveManager {
 
+    public struct EntityType {
+        public IEntity type;
+        public int waveSpawnLimit;
+
+        public EntityType(IEntity item, int maxWaveSpawn)
+        {
+            type = item;
+            waveSpawnLimit = maxWaveSpawn;
+        }
+    }
+
+
     public int currentWave { get; set; } = 0;
     public List<IEntityBehaviour> allSpawnedEnemies = new List<IEntityBehaviour>();
-    public List<IEntity> allEntityTypes = new List<IEntity>();
+    public List<EntityType> allEntityTypes = new List<EntityType>();
     public List<IEntityBehaviour> summonedEnemies = new List<IEntityBehaviour>();
 
     private const int BOSSWAVE = 9;
@@ -40,6 +52,16 @@ public class WaveManager {
     {
         //debugScreen.text = $"Current Enemies Alive: {allSpawnedEnemies.Count(a => a.activeSelf)}";
     }
+    Coroutine nextWave;
+    public void AttemptToGoToNextWave()
+    {
+        if (!areAllEnemiesDead) return;
+        if (nextWave != null)
+            levelManagerRef.StopCoroutine(nextWave);
+        levelManagerRef.hasAlreadyRewinded = false;
+        nextWave = levelManagerRef.StartCoroutine(levelManagerRef.waveManager.DeployNextWave());
+        TimeHandler.GetInstance.isRewinding = false;
+    }
 
     public MonoBehaviour Behaivour { get; }
 
@@ -56,6 +78,7 @@ public class WaveManager {
     public IEnumerator DeployFirstWave<E>(LevelManager levelManager, int amountOfEnemies, float spawnDelay, params E[] enemyTypes) where E : IEntity
     {
         allSpawnedEnemies.Clear();
+        summonedEnemies.Clear();
         allEntityTypes.Clear();
 
         levelManagerRef = levelManager;
@@ -69,7 +92,7 @@ public class WaveManager {
                 DisplayAllLivingEnemies();
             }
 
-            allEntityTypes.Add(item);
+            allEntityTypes.Add(new EntityType(item, 40));
         }
 
         currentWave++;
@@ -80,6 +103,29 @@ public class WaveManager {
 
     public IEnumerator DeployNextWave()
     {
+
+        if (currentWave % 4 == 0)
+        {
+            yield return TimeHandler.GetInstance.DelayedClearRecordings();
+        }
+
+        if (currentWave % 20 == 0)
+        {
+            IEnumerator ClearEntities(IEntityBehaviour behaviour)
+            {
+                if (behaviour.gameObject.activeSelf)
+                {
+                    behaviour.gameObject.SetActive(false);
+                    yield return new WaitForSeconds(0.1f);
+                }
+                levelManagerRef.PlayArea[behaviour.parentClass.spawnIndex.x, behaviour.parentClass.spawnIndex.y].RemoveEntity();
+                yield return null;
+            }
+
+            yield return allSpawnedEnemies.ExecuteAction(ClearEntities);
+            allSpawnedEnemies.Clear();
+        }
+
         TimeHandler.GetInstance.latestList++;
         summonedEnemies.ExecuteAction(s => s.gameObject.SetActive(false));
         summonedEnemies.Clear();
@@ -87,17 +133,17 @@ public class WaveManager {
 
         yield return new WaitForSeconds(1.35f);
 
-       
+
 
         Annoy_O_Tron tron = new Annoy_O_Tron();
         CarpetBomber bomber = new CarpetBomber();
 
-        AddEntityType(new BouncyWall(), 1);
-        AddEntityType(tron, 3);
-        AddEntityType(new Slime(), 4);
-        AddEntityType(bomber, 6);
-        AddEntityType(new Turret(), 8);
-        AddEntityType(new Boss(), 20);
+        AddEntityType(new BouncyWall(), 4, int.MaxValue);
+        AddEntityType(tron, 2, int.MaxValue);
+        AddEntityType(new Slime(), 4, int.MaxValue);
+        AddEntityType(bomber, 6, int.MaxValue);
+        AddEntityType(new Turret(), 8, int.MaxValue);
+        AddEntityType(new Boss(), 20, int.MaxValue);
 
 
 
@@ -112,34 +158,45 @@ public class WaveManager {
         }
         yield return allSpawnedEnemies.ExecuteAction(RevivePreviousEnemies);
 
-        IEnumerator AddExtraEnemies(IEntity e)
+        IEnumerator AddExtraEnemies(EntityType e)
         {
-            int amm = Random.Range(1, 3);
+            if (e.waveSpawnLimit <= currentWave && e.waveSpawnLimit != 0) goto exit;
+            int amm = Random.Range(0, 1);
+            if (currentWave % 20 == 0)
+                amm = Random.Range(4, 7);
+            if (currentWave < 5)
+            {
+                amm = Random.Range(1, 3);
+            }
             for (int i = 0; i < amm; i++)
             {
-                yield return CreateEnemyAtRandomPosition(e, 0.05f, levelManagerRef);
+                yield return CreateEnemyAtRandomPosition(e.type, 0.05f, levelManagerRef);
                 DisplayAllLivingEnemies();
 
             }
+        exit: yield return null;
+
         }
         yield return allEntityTypes.ExecuteAction(AddExtraEnemies);
 
         if (currentWave % BOSSWAVE == 0)
         {
             addBosses();
-        }      
+        }
 
         currentWave++;
         Debug.Log($"Current Wave (at DeployNextWave):{currentWave}");
         waveCounter.text = $"Wave:{currentWave}";
+
+
     }
 
-    private void AddEntityType<E>(E entity, int minWaveSpawn) where E : IEntity
+    private void AddEntityType<E>(E entity, int minWaveSpawn, int maxWaveSpawn) where E : IEntity
     {
         if (!allEntityTypes.Contains(entity))
             if (currentWave >= minWaveSpawn)
             {
-                allEntityTypes.Add(entity);
+                allEntityTypes.Add(new EntityType(entity, maxWaveSpawn));
             }
     }
 
@@ -150,7 +207,7 @@ public class WaveManager {
             CreateBossAtRandomPosition(new Boss(), levelManagerRef);
         }
     }
-    
+
 
     void CreateBossAtRandomPosition<E>(E boss, LevelManager levelManager) where E : IEntity
     {

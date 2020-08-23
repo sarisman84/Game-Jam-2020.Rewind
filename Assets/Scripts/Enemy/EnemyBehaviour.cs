@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SocialPlatforms;
@@ -91,10 +92,14 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable, IEntityBehaviour {
             {
                 foundPlayer.TakeDamage(null);
                 localTimer = 0;
+                gameObject.SetActive(false);
+                (parentClass as Enemy).levelManagerRef.waveManager.AttemptToGoToNextWave();
             }
 
         }
     }
+
+
 
     public void AssignEvents(IEntity enemy)
     {

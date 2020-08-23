@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 public class BulletBehaivour : MonoBehaviour {
     new Rigidbody rigidbody;
 
+    public GameObject owner;
     public float bulletVelocity { get; set; }
 
     public Rigidbody physics => rigidbody;
@@ -88,7 +89,7 @@ public class BulletBehaivour : MonoBehaviour {
         this.bulletVelocity = bulletVelocity;
     }
 
-    public static void InitializeBullet(Vector3 firePosition, Quaternion fireRotation)
+    public static BulletBehaivour InitializeBullet(GameObject owner, Vector3 firePosition, Quaternion fireRotation)
     {
         EffectsManager.GetInstance.CurrentAudioFiles.PlayAudioClip("PlayerShoot", c =>
         {
@@ -109,5 +110,7 @@ public class BulletBehaivour : MonoBehaviour {
         BulletBehaivour bullet = ObjectPooler.GetPooledObject<BulletBehaivour>();
         bullet.gameObject.SetActive(true);
         bullet.Setup(firePosition, fireRotation);
+        bullet.owner = owner;
+        return bullet;
     }
 }
